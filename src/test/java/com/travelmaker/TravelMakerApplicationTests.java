@@ -1,4 +1,4 @@
-package com.travelmaker.travel_maker;
+package com.travelmaker;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
