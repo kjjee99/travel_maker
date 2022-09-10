@@ -19,11 +19,11 @@ public class UserEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
-    private int user_id;
+    private int id;
     @Column(name="email")
     private String email;
     @Column(name="user_id")
-    private String id;
+    private String user_id;
     @Column(name="password")
     private String password;
     @Column(name="profile_img")
@@ -35,10 +35,10 @@ public class UserEntity{
     private String role;
 
     @Builder
-    public UserEntity(int user_id, String email, String id, String password, String profile_img, String post_id, String role) {
+    public UserEntity(int id, String email, String user_id, String password, String profile_img, String post_id, String role) {
+        this.id = id;
         this.user_id = user_id;
         this.email = email;
-        this.id = id;
         this.password = password;
         this.profile_img = profile_img;
         this.post_id = post_id;
