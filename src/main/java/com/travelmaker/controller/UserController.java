@@ -16,4 +16,7 @@ public interface UserController {
 
     /* 로그아웃 */
     ResponseEntity logout(HttpServletResponse response);
+
+    /* 유저 정보 수정 */
+    ResponseEntity modifyUser(@RequestBody User user);
 }

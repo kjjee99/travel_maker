@@ -10,11 +10,10 @@ public interface UserServcie {
     /* 로그인 */
     String login(User user);
 
-    /* 로그아웃 */
-
     /* 유저 페이지 */
 
     /* 유저 정보 수정 */
+    boolean modifyUser(User user);
 
     /* 회원 탈퇴 */
 

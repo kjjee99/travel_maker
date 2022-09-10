@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Response;
 
 @Slf4j
 @RestController
@@ -74,5 +75,17 @@ public class UserControllerImpl implements UserController {
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+    /* 유저 정보 수정 */
+    @Override
+    @PutMapping("/user")
+    @ResponseBody
+    public ResponseEntity modifyUser(@RequestBody User user){
+        boolean result = service.modifyUser(user);
+        if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 회원 탈퇴 */
 
 }

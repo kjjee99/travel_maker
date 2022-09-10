@@ -19,14 +19,14 @@ public class UserServiceImpl implements UserServcie{
     public boolean addUser(User user){
         UserEntity entity = UserEntity.builder()
                 .email(user.getEmail())
-                .id(user.getId())
+                .user_id(user.getId())
                 .password(user.getPassword())
                 .post_id("{1,2,3}")
                 .role(user.getRole())
                 .build();
         UserEntity savedUser = repository.save(entity);
 
-        if(savedUser.getId().isEmpty())    return false;
+        if(savedUser.getUser_id().isEmpty())    return false;
         return true;
     }
 
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserServcie{
         UserEntity findUser = repository.findByUserId(id);
 
         // 회원이 등록되지 않았을 경우
-        if(findUser.getId().isEmpty()){
+        if(findUser.getUser_id().isEmpty()){
             return null;
         }
         // 비밀번호가 같지 않을 경우
@@ -46,6 +46,40 @@ public class UserServiceImpl implements UserServcie{
             return null;
         }
 
-        return findUser.getId();
+        return findUser.getUser_id();
+    }
+
+    /* 유저 정보 수정 */
+    @Override
+    public boolean modifyUser(User user){
+        UserEntity entity = UserEntity.builder()
+                .email(user.getEmail())
+                .user_id(user.getId())
+                .password(user.getPassword())
+                .post_id("{1,2,3}")
+                .role(user.getRole())
+                .build();
+        UserEntity findUser = repository.findByUserId(user.getId());
+
+        // 찾는 유저가 없을 경우
+        if(findUser.getUser_id().isEmpty()){
+            return false;
+        }
+
+        String userId = user.getId();
+        String email = user.getEmail();
+        String password = user.getPassword();
+        String profile_img = user.getProfile_img();
+        String role = user.getRole();
+
+
+        int updatedUser = repository.updateUser(userId, email, password, profile_img, role);
+
+        // 수정되지 않은 경우
+        if(updatedUser == -1){
+            return false;
+        }
+
+        return true;
     }
 }
