@@ -3,9 +3,11 @@ package com.travelmaker.service;
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
 import com.travelmaker.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserServcie{
 
@@ -26,5 +28,24 @@ public class UserServiceImpl implements UserServcie{
 
         if(savedUser.getId().isEmpty())    return false;
         return true;
+    }
+
+    /* 로그인 */
+    @Override
+    public String login(User user){
+        String id = user.getId();
+        String password = user.getPassword();
+        UserEntity findUser = repository.findByUserId(id);
+
+        // 회원이 등록되지 않았을 경우
+        if(findUser.getId().isEmpty()){
+            return null;
+        }
+        // 비밀번호가 같지 않을 경우
+        if(!password.equals(findUser.getPassword())){
+            return null;
+        }
+
+        return findUser.getId();
     }
 }

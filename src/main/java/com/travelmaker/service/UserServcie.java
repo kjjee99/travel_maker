@@ -8,6 +8,7 @@ public interface UserServcie {
     boolean addUser(User user);
 
     /* 로그인 */
+    String login(User user);
 
     /* 로그아웃 */
 

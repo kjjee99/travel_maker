@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -19,12 +22,6 @@ public class UserControllerImpl implements UserController {
     UserServiceImpl service;
     @Autowired
     UserRepository repository;
-
-    @GetMapping("/home")
-    public void home(){
-        log.info("home");
-        System.out.println("home");
-    }
 
     /* 회원가입 */
     @Override
@@ -40,15 +37,28 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 로그인 */
+    @Override
     @PostMapping("/login")
     @ResponseBody
-    public ResponseEntity login(@RequestBody User user){
-        boolean result = service.addUser(user);
+    public ResponseEntity login(@RequestBody User user, HttpServletResponse response){
+        String id = service.login(user);
 
-        if(!result){
+        // TODO: error 발생
+        if(id == null){
             return ResponseEntity.ok(HttpStatus.FORBIDDEN);
         }
+
+        // TODO: 쿠키 암호화
+        // 쿠키 저장
+        Cookie cookie = new Cookie("userId", id);
+        cookie.setMaxAge(1000 * 60 * 60 * 3);   // 3 hours
+        cookie.setPath("/");        // 모든 경로에서 접근 가능
+        cookie.setHttpOnly(true);   // 브라우저에서 쿠키 접근 X
+        response.addCookie(cookie);
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
+
+
 
 }
