@@ -4,6 +4,7 @@ import com.travelmaker.dto.User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface UserController {
@@ -16,6 +17,9 @@ public interface UserController {
 
     /* 로그아웃 */
     ResponseEntity logout(HttpServletResponse response);
+
+    /* 유저 정보 조회 */
+    User searchUser(HttpServletRequest request);
 
     /* 유저 정보 수정 */
     ResponseEntity modifyUser(@RequestBody User user);

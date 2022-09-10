@@ -49,6 +49,22 @@ public class UserServiceImpl implements UserServcie{
         return findUser.getUser_id();
     }
 
+    /* 유저 정보 조회 */
+    @Override
+    public User searchUser(String userId){
+        UserEntity user = repository.findByUserId(userId);
+
+        // 찾는 유저가 없는 경우
+        if(user.getUser_id().isEmpty()) return null;
+
+        User findUser = User.builder()
+                .id(user.getUser_id())
+                .email(user.getEmail())
+                .profile_img(user.getProfile_img())
+                .build();
+        return findUser;
+    }
+
     /* 유저 정보 수정 */
     @Override
     public boolean modifyUser(User user){

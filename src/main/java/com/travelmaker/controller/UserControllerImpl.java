@@ -6,6 +6,7 @@ import com.travelmaker.repository.UserRepository;
 import com.travelmaker.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +75,29 @@ public class UserControllerImpl implements UserController {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 유저 정보 조회 */
+    @Override
+    @GetMapping("/user")
+    @ResponseBody
+    public User searchUser(HttpServletRequest request){
+        String userId = null;
+
+        // 쿠키에서 userId 찾기
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie : cookies){
+            if(cookie.getName().equals("userId")){
+                userId = cookie.getValue();
+            }
+        }
+
+        // TODO: 로그인이 필요하다는 Error
+        if(userId == null){
+            return null;
+        }
+
+        return service.searchUser(userId);
     }
 
     /* 유저 정보 수정 */
