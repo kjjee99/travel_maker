@@ -52,13 +52,6 @@ public class UserServiceImpl implements UserServcie{
     /* 유저 정보 수정 */
     @Override
     public boolean modifyUser(User user){
-        UserEntity entity = UserEntity.builder()
-                .email(user.getEmail())
-                .user_id(user.getId())
-                .password(user.getPassword())
-                .post_id("{1,2,3}")
-                .role(user.getRole())
-                .build();
         UserEntity findUser = repository.findByUserId(user.getId());
 
         // 찾는 유저가 없을 경우
@@ -66,12 +59,12 @@ public class UserServiceImpl implements UserServcie{
             return false;
         }
 
+        // params
         String userId = user.getId();
         String email = user.getEmail();
         String password = user.getPassword();
         String profile_img = user.getProfile_img();
         String role = user.getRole();
-
 
         int updatedUser = repository.updateUser(userId, email, password, profile_img, role);
 
@@ -80,6 +73,20 @@ public class UserServiceImpl implements UserServcie{
             return false;
         }
 
+        return true;
+    }
+
+    /* 회원 탈퇴 */
+    public boolean deleteUser(User user){
+        UserEntity findUser = repository.findByUserId(user.getId());
+
+        // 유저 정보가 존재하지 않을 경우
+        if(findUser.getUser_id().isEmpty()) return false;
+
+        int deletedUser = repository.deleteByUserId(findUser.getUser_id());
+
+        // 삭제되지 않은 경우
+        if(deletedUser == -1)   return false;
         return true;
     }
 }

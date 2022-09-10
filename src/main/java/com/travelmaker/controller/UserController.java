@@ -19,4 +19,7 @@ public interface UserController {
 
     /* 유저 정보 수정 */
     ResponseEntity modifyUser(@RequestBody User user);
+
+    /* 회원 탈퇴 */
+    ResponseEntity deleteUser(@RequestBody User user, HttpServletResponse response);
 }

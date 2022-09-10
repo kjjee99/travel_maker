@@ -87,5 +87,21 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 회원 탈퇴 */
+    @Override
+    @DeleteMapping("/user")
+    @ResponseBody
+    public ResponseEntity deleteUser(@RequestBody User user, HttpServletResponse response){
+        boolean result = service.deleteUser(user);
+        if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+
+        // 존재하던 쿠키 삭제
+        Cookie cookie = new Cookie("userId", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
 }

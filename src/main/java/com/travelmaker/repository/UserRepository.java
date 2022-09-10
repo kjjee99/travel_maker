@@ -27,4 +27,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                           @Param("password") String password,
                           @Param("profileImg") String profileImg,
                           @Param("role") String role);
+
+    @Modifying
+    @Query(value = "DELETE from user u where u.user_id = :userId", nativeQuery = true)
+    int deleteByUserId(@Param("userId") String userId);
 }

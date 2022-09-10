@@ -16,6 +16,7 @@ public interface UserServcie {
     boolean modifyUser(User user);
 
     /* 회원 탈퇴 */
+    boolean deleteUser(User user);
 
     /* 비밀번호 찾기 */
 }
