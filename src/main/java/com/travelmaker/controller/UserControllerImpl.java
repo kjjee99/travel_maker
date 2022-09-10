@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
@@ -59,6 +60,19 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /* 로그아웃 */
+    @Override
+    @GetMapping("/logout")
+    @ResponseBody
+    public ResponseEntity logout(HttpServletResponse response){
+        // 쿠키에서 삭제
+        Cookie cookie = new Cookie("userId", null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
 
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
 
 }

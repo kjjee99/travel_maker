@@ -13,4 +13,7 @@ public interface UserController {
 
     /* 로그인 */
     ResponseEntity login(@RequestBody User user, HttpServletResponse response);
+
+    /* 로그아웃 */
+    ResponseEntity logout(HttpServletResponse response);
 }
