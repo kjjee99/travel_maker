@@ -54,7 +54,7 @@ public class UserControllerImpl implements UserController {
         // TODO: 쿠키 암호화
         // 쿠키 저장
         Cookie cookie = new Cookie("userId", id);
-        cookie.setMaxAge(1000 * 60 * 60 * 3);   // 3 hours
+        cookie.setMaxAge(60 * 60 * 3);   // 3 hours
         cookie.setPath("/");        // 모든 경로에서 접근 가능
         cookie.setHttpOnly(true);   // 브라우저에서 쿠키 접근 X
         response.addCookie(cookie);
