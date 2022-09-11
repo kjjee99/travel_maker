@@ -5,6 +5,7 @@ import com.travelmaker.entity.UserEntity;
 import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -12,18 +13,25 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserServcie{
 
     @Autowired
-    UserRepository repository;
+    private UserRepository repository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /* 회원가입 */
     @Override
     public boolean addUser(User user){
+        // 비밀번호 암호화
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+
         UserEntity entity = UserEntity.builder()
                 .email(user.getEmail())
                 .user_id(user.getId())
-                .password(user.getPassword())
+                .password(encodedPassword)
                 .post_id("{1,2,3}")
                 .role(user.getRole())
                 .build();
+
+        // DB 저장
         UserEntity savedUser = repository.save(entity);
 
         if(savedUser.getUser_id().isEmpty())    return false;
@@ -41,8 +49,10 @@ public class UserServiceImpl implements UserServcie{
         if(findUser.getUser_id().isEmpty()){
             return null;
         }
+
+        String userPW = findUser.getPassword();
         // 비밀번호가 같지 않을 경우
-        if(!password.equals(findUser.getPassword())){
+        if(!passwordEncoder.matches(password, userPW)){
             return null;
         }
 
@@ -78,7 +88,7 @@ public class UserServiceImpl implements UserServcie{
         // params
         String userId = user.getId();
         String email = user.getEmail();
-        String password = user.getPassword();
+        String password = passwordEncoder.encode(user.getPassword());
         String profile_img = user.getProfile_img();
         String role = user.getRole();
 
