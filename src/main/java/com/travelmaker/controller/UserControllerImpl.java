@@ -20,6 +20,8 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     UserServiceImpl service;
+    @Autowired
+    ConfigControllerImpl middleware;
 
     // TODO: @ResponseBody가 없어도 실행되는지 확인
 
@@ -93,12 +95,7 @@ public class UserControllerImpl implements UserController {
         String userId = null;
 
         // 쿠키에서 userId 찾기
-        Cookie[] cookies = request.getCookies();
-        for(Cookie cookie : cookies){
-            if(cookie.getName().equals("userId")){
-                userId = cookie.getValue();
-            }
-        }
+        userId = middleware.extractId(request);
 
         // TODO: 로그인이 필요하다는 Error
         if(userId == null){
@@ -113,7 +110,12 @@ public class UserControllerImpl implements UserController {
     @Override
     @PostMapping("/user")
     @ResponseBody
-    public ResponseEntity modifyUser(@RequestBody User user){
+    public ResponseEntity modifyUser(HttpServletRequest request,@RequestBody User user) {
+        String userId = middleware.extractId(request);
+        // TODO: ERROR
+        // 로그인이 되어있지 않은 상태
+        if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+
         boolean result = service.modifyUser(user);
         if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
@@ -123,10 +125,15 @@ public class UserControllerImpl implements UserController {
 
     /* 회원 탈퇴 */
     @Override
-    @PostMapping("/user")
+    @GetMapping("/sign-out")
     @ResponseBody
-    public ResponseEntity deleteUser(@RequestBody User user, HttpServletResponse response){
-        boolean result = service.deleteUser(user);
+    public ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response){
+        // 쿠키에서 userId 찾기
+        String userId = middleware.extractId(request);
+        // TODO: Login Required Erro
+        if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+
+        boolean result = service.deleteUser(userId);
         if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
         // 존재하던 쿠키 삭제
