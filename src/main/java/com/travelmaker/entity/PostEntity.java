@@ -1,10 +1,15 @@
 package com.travelmaker.entity;
 
 import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
+@NoArgsConstructor
+@Table(name = "post")
 public class PostEntity {
 
     @Id
