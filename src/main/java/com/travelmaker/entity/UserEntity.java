@@ -1,6 +1,5 @@
 package com.travelmaker.entity;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Builder;
 import lombok.Getter;
