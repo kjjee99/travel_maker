@@ -22,5 +22,5 @@ public interface UserServcie {
     boolean modifyUser(User user);
 
     /* 회원 탈퇴 */
-    boolean deleteUser(User user);
+    boolean deleteUser(String userId);
 }

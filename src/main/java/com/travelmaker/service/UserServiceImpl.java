@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserServcie{
     }
 
     /* 회원 탈퇴 */
-    public boolean deleteUser(User user){
-        UserEntity findUser = repository.findByUserId(user.getId());
+    public boolean deleteUser(String userId){
+        UserEntity findUser = repository.findByUserId(userId);
 
         // 유저 정보가 존재하지 않을 경우
         if(findUser.getUser_id().isEmpty()) return false;
