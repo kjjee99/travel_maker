@@ -16,6 +16,7 @@ public class ConfigControllerImpl implements ConfigController {
         String userId = null;
 
         Cookie[] cookies = request.getCookies();
+        // TODO: cookie에 값이 없을 때 ERROR 남
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("userId")){
                 userId = cookie.getValue();
