@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserServcie{
                 .email(user.getEmail())
                 .user_id(user.getId())
                 .password(encodedPassword)
-                .post_id("{1,2,3}")
                 .role(user.getRole())
                 .build();
 
@@ -35,6 +34,13 @@ public class UserServiceImpl implements UserServcie{
         UserEntity savedUser = repository.save(entity);
 
         if(savedUser.getUser_id().isEmpty())    return false;
+        return true;
+    }
+
+    /* 중복 아이디 확인 */
+    @Override
+    public boolean checkId(String id){
+    // TODO: FILL THE METHOD!!!
         return true;
     }
 
@@ -109,6 +115,7 @@ public class UserServiceImpl implements UserServcie{
         // 유저 정보가 존재하지 않을 경우
         if(findUser.getUser_id().isEmpty()) return false;
 
+        // TODO: 값을 null로 변환
         int deletedUser = repository.deleteByUserId(findUser.getUser_id());
 
         // 삭제되지 않은 경우

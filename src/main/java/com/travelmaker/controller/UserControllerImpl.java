@@ -1,12 +1,10 @@
 package com.travelmaker.controller;
 
-import com.travelmaker.entity.UserEntity;
 import com.travelmaker.dto.User;
 import com.travelmaker.repository.UserRepository;
 import com.travelmaker.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
 
 @Slf4j
 @RestController
@@ -23,8 +20,8 @@ public class UserControllerImpl implements UserController {
 
     @Autowired
     UserServiceImpl service;
-    @Autowired
-    UserRepository repository;
+
+    // TODO: @ResponseBody가 없어도 실행되는지 확인
 
     /* 회원가입 */
     @Override
@@ -32,10 +29,21 @@ public class UserControllerImpl implements UserController {
     @ResponseBody
     public ResponseEntity addUser(@RequestBody User user){
         boolean result = service.addUser(user);
-        
+
+        // TODO: 중복 아이디 확인하기 or 중복 아이디 확인 api
         if(!result){
             return ResponseEntity.ok(HttpStatus.FORBIDDEN);
         }
+        // 성공했을 때
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 중복 아이디 확인 */
+    @Override
+    @GetMapping("/check")
+    @ResponseBody
+    public ResponseEntity checkId(@RequestParam String id){
+        boolean check = service.checkId(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -55,8 +63,8 @@ public class UserControllerImpl implements UserController {
         // 쿠키 저장
         Cookie cookie = new Cookie("userId", id);
         cookie.setMaxAge(60 * 60 * 3);   // 3 hours
-        cookie.setPath("/");        // 모든 경로에서 접근 가능
-        cookie.setHttpOnly(true);   // 브라우저에서 쿠키 접근 X
+        cookie.setPath("/");            // 모든 경로에서 접근 가능
+        cookie.setHttpOnly(true);       // 브라우저에서 쿠키 접근 X
         response.addCookie(cookie);
 
         return ResponseEntity.ok(HttpStatus.OK);
@@ -79,7 +87,7 @@ public class UserControllerImpl implements UserController {
 
     /* 유저 정보 조회 */
     @Override
-    @GetMapping("/user")
+    @GetMapping("/info")
     @ResponseBody
     public User searchUser(HttpServletRequest request){
         String userId = null;
@@ -97,22 +105,25 @@ public class UserControllerImpl implements UserController {
             return null;
         }
 
+        // 프론트에서 받는 타입(json)
         return service.searchUser(userId);
     }
 
     /* 유저 정보 수정 */
     @Override
-    @PutMapping("/user")
+    @PostMapping("/user")
     @ResponseBody
     public ResponseEntity modifyUser(@RequestBody User user){
         boolean result = service.modifyUser(user);
         if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
+
+        // TODO: 수정된 정보 반환
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /* 회원 탈퇴 */
     @Override
-    @DeleteMapping("/user")
+    @PostMapping("/user")
     @ResponseBody
     public ResponseEntity deleteUser(@RequestBody User user, HttpServletResponse response){
         boolean result = service.deleteUser(user);
@@ -128,4 +139,5 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    // 비밀번호 찾기 => 추가 기능
 }

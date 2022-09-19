@@ -9,6 +9,9 @@ public interface UserServcie {
     /* 회원가입 */
     boolean addUser(User user);
 
+    /* 중복 아이디 확인 */
+    boolean checkId(String id);
+
     /* 로그인 */
     String login(User user);
 
