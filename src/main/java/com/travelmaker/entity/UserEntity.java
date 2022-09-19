@@ -28,20 +28,16 @@ public class UserEntity{
     private String password;
     @Column(name="profile_img")
     private String profile_img;
-    // json
-    @Column(name="post_id")
-    private String post_id;
     @Column(name="role")
     private String role;
 
     @Builder
-    public UserEntity(int id, String email, String user_id, String password, String profile_img, String post_id, String role) {
+    public UserEntity(int id, String email, String user_id, String password, String profile_img, String role) {
         this.id = id;
         this.user_id = user_id;
         this.email = email;
         this.password = password;
         this.profile_img = profile_img;
-        this.post_id = post_id;
         this.role = role;
     }
 
