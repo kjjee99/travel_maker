@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserServcie{
                 .email(user.getEmail())
                 .user_id(user.getId())
                 .password(encodedPassword)
-                .role(user.getRole())
+                .phone_number(user.getPhone_number())
                 .build();
 
         // DB 저장
@@ -76,6 +76,7 @@ public class UserServiceImpl implements UserServcie{
         User findUser = User.builder()
                 .id(user.getUser_id())
                 .email(user.getEmail())
+                .phone_number(user.getPhone_number())
                 .profile_img(user.getProfile_img())
                 .build();
         return findUser;
@@ -95,10 +96,11 @@ public class UserServiceImpl implements UserServcie{
         String userId = user.getId();
         String email = user.getEmail();
         String password = passwordEncoder.encode(user.getPassword());
+        String phone_number = user.getPhone_number();
         String profile_img = user.getProfile_img();
         String role = user.getRole();
 
-        int updatedUser = repository.updateUser(userId, email, password, profile_img, role);
+        int updatedUser = repository.updateUser(userId, email, password, phone_number, profile_img, role);
 
         // 수정되지 않은 경우
         if(updatedUser == -1){

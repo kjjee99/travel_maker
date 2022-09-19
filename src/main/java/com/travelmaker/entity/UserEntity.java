@@ -25,17 +25,20 @@ public class UserEntity{
     private String user_id;
     @Column(name="password")
     private String password;
+    @Column(name = "phone_number")
+    private String phone_number;
     @Column(name="profile_img")
     private String profile_img;
     @Column(name="role")
     private String role;
 
     @Builder
-    public UserEntity(int id, String email, String user_id, String password, String profile_img, String role) {
+    public UserEntity(int id, String email, String user_id, String password, String phone_number, String profile_img, String role) {
         this.id = id;
         this.user_id = user_id;
         this.email = email;
         this.password = password;
+        this.phone_number = phone_number;
         this.profile_img = profile_img;
         this.role = role;
     }
