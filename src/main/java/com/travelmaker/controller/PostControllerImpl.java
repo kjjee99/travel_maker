@@ -51,6 +51,8 @@ public class PostControllerImpl implements PostController{
     }
 
     /* 글 상세 조회 */
+    @Override
+    @GetMapping("/detail")
     public Post showPost(HttpServletRequest request, @RequestParam int idx){
         String userId = middleware.extractId(request);
         // TODO: Login Required Error
@@ -61,6 +63,8 @@ public class PostControllerImpl implements PostController{
     }
 
     /* 글 수정 */
+    @Override
+    @PostMapping("/post")
     public Post modifyPost(HttpServletRequest request, @RequestBody Post post){
         String userId = middleware.extractId(request);
         // TODO: Login Required Error
@@ -71,6 +75,8 @@ public class PostControllerImpl implements PostController{
     }
 
     /* 글 삭제 */
+    @Override
+    @GetMapping("/post")
     public ResponseEntity deletePost(@RequestParam int idx){
         boolean deletedResult = postService.deletePost(idx);
         // TODO: ERROR
