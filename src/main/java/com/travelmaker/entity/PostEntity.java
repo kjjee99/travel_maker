@@ -29,12 +29,12 @@ public class PostEntity {
     @Column(name = "content")
     private String content;
 
+
     @Column(name = "`like`")
     private int like;
 
     @Column(name = "`figures`")
     private String figures;
-
     @Column(name = "post_img")
     private String post_img;
 
