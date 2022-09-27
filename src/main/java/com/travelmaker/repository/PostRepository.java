@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 public interface PostRepository extends JpaRepository<PostEntity, String> {
 
     @Query(value="select user_id, title, content, like, figures, post_img, create_at" +
-            "from post")
+            "from post", nativeQuery = true)
     Post findByIdx(int idx);
 
     @Modifying
@@ -28,6 +28,6 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
 
     @Modifying
     @Query(value = "update post set title=null, content=null, figures=null, post_img=null" +
-            "where id=:id")
+            "where id=:id", nativeQuery = true)
     int deletePost(@Param("id") int idx);
 }
