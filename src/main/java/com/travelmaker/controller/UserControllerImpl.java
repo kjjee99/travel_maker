@@ -130,7 +130,7 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response){
         // 쿠키에서 userId 찾기
         String userId = middleware.extractId(request);
-        // TODO: Login Required Erro
+        // TODO: Login Required Error
         if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
         boolean result = service.deleteUser(userId);

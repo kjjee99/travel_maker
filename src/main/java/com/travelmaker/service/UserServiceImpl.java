@@ -2,11 +2,17 @@ package com.travelmaker.service;
 
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
+import com.travelmaker.error.CustomException;
+import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import javax.swing.text.html.Option;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -40,7 +46,7 @@ public class UserServiceImpl implements UserServcie{
     /* 중복 아이디 확인 */
     @Override
     public boolean checkId(String id){
-    // TODO: FILL THE METHOD!!!
+        // TODO:FILL THE METHOD!!!
         return true;
     }
 
@@ -49,17 +55,18 @@ public class UserServiceImpl implements UserServcie{
     public String login(User user){
         String id = user.getId();
         String password = user.getPassword();
-        UserEntity findUser = repository.findByUserId(id);
+        // user object를 DB에서 가져오기
+        Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(id)
+                // ERROR 던지기
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
-        // 회원이 등록되지 않았을 경우
-        if(findUser.getUser_id().isEmpty()){
-            return null;
-        }
-
+        UserEntity findUser = entity.get();
+        // DB에 저장된 비밀번호
         String userPW = findUser.getPassword();
         // 비밀번호가 같지 않을 경우
         if(!passwordEncoder.matches(password, userPW)){
-            return null;
+            // ERROR 던지기
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         return findUser.getUser_id();
@@ -68,10 +75,10 @@ public class UserServiceImpl implements UserServcie{
     /* 유저 정보 조회 */
     @Override
     public User searchUser(String userId){
-        UserEntity user = repository.findByUserId(userId);
+        Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
-        // 찾는 유저가 없는 경우
-        if(user.getUser_id().isEmpty()) return null;
+        UserEntity user = entity.get();
 
         User findUser = User.builder()
                 .id(user.getUser_id())
@@ -85,12 +92,9 @@ public class UserServiceImpl implements UserServcie{
     /* 유저 정보 수정 */
     @Override
     public boolean modifyUser(User user){
-        UserEntity findUser = repository.findByUserId(user.getId());
-
-        // 찾는 유저가 없을 경우
-        if(findUser.getUser_id().isEmpty()){
-            return false;
-        }
+        Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(user.getId())
+                // userId가 없는 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         // params
         String userId = user.getId();
@@ -100,28 +104,23 @@ public class UserServiceImpl implements UserServcie{
         String profile_img = user.getProfile_img();
         String role = user.getRole();
 
-        int updatedUser = repository.updateUser(userId, email, password, phone_number, profile_img, role);
-
-        // 수정되지 않은 경우
-        if(updatedUser == -1){
-            return false;
-        }
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(userId, email, password, phone_number, profile_img, role)
+                // 수정되지 않은 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
         return true;
     }
 
     /* 회원 탈퇴 */
     public boolean deleteUser(String userId){
-        UserEntity findUser = repository.findByUserId(userId);
+        Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
-        // 유저 정보가 존재하지 않을 경우
-        if(findUser.getUser_id().isEmpty()) return false;
+        UserEntity findUser = entity.get();
 
-        // TODO: 값을 null로 변환
-        int deletedUser = repository.deleteByUserId(findUser.getUser_id());
-
-        // 삭제되지 않은 경우
-        if(deletedUser == -1)   return false;
+        Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUser_id())
+                // 삭제되지 않은 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
         return true;
     }
 }
