@@ -1,5 +1,7 @@
 package com.travelmaker.controller;
 
+import com.travelmaker.error.CustomException;
+import com.travelmaker.error.ErrorCode;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -30,8 +32,8 @@ public class ConfigControllerImpl implements ConfigController {
     public boolean comparePassword(HttpServletRequest request){
         String userId = extractId(request);
 
-        // TODO: Login required Error
-        if(userId == null)  return false;
+        // Login required Error
+        if(userId == null)  throw new CustomException(ErrorCode.LOGIN_REQUIRED);
 
         // TODO : service 단에서 구현
 //        return service.comparePassword(userId);
