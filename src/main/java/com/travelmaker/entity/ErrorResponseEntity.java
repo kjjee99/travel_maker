@@ -17,7 +17,7 @@ public class ErrorResponseEntity {
                 .status(e.getStatus())
                 .body(ErrorResponseEntity.builder()
                         .status(e.getStatus().value())
-                        .code(e.name())성
+                        .code(e.name())
                         .message(e.getMessage())
                         .build());
     }
