@@ -30,8 +30,6 @@ public class PostControllerImpl implements PostController{
 
         boolean savedResult = postService.writePost(post);
 
-        // TODO: ERROR
-        if(!savedResult)    return ResponseEntity.ok(HttpStatus.FORBIDDEN);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -40,13 +38,9 @@ public class PostControllerImpl implements PostController{
     @GetMapping("/list")
     public List<PostEntity> postList(HttpServletRequest request){
         String userId = middleware.extractId(request);
-        // TODO: Login Required Error
-        if(userId == null)  return null;
 
         List<PostEntity> list = postService.postList();
 
-        // TODO: 게시글이 존재하지 않을 때 ERROR
-        if(list.size() == 0)    return null;
         return list;
     }
 
@@ -55,8 +49,6 @@ public class PostControllerImpl implements PostController{
     @GetMapping("/detail")
     public Post showPost(HttpServletRequest request, @RequestParam int idx){
         String userId = middleware.extractId(request);
-        // TODO: Login Required Error
-        if(userId == null)  return null;
 
         Post post = postService.showPost(idx);
         return post;
@@ -67,9 +59,8 @@ public class PostControllerImpl implements PostController{
     @PostMapping("/post")
     public Post modifyPost(HttpServletRequest request, @RequestBody Post post){
         String userId = middleware.extractId(request);
-        // TODO: Login Required Error
-        if(userId == null)  return null;
 
+        // TODO: 작성한 유저인지 확인하기
         Post updatedPost = postService.modifyPost(post);
         return updatedPost;
     }
@@ -78,9 +69,8 @@ public class PostControllerImpl implements PostController{
     @Override
     @GetMapping("/post")
     public ResponseEntity deletePost(@RequestParam int idx){
+        // TODO: 작성한 유저인지 확인하기
         boolean deletedResult = postService.deletePost(idx);
-        // TODO: ERROR
-        if(!deletedResult)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }
