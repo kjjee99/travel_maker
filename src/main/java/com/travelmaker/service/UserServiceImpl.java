@@ -39,7 +39,7 @@ public class UserServiceImpl implements UserServcie{
         // DB 저장
         UserEntity savedUser = repository.save(entity);
 
-        if(savedUser.getUser_id().isEmpty())    return false;
+        if(savedUser.getUser_id().isEmpty())    throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         return true;
     }
 
