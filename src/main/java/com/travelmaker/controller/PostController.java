@@ -17,7 +17,8 @@ public interface PostController {
     /* 글 전체 조회 */
     List<PostEntity> postList(HttpServletRequest request);
 
-    /* 사용자가 작성한 글 목록 조회*/
+    /* 유저가 작성한 글 목록 조회 */
+    List<PostEntity> userPostList(HttpServletRequest request);
 
     /* 글 상세조회 */
     Post showPost(HttpServletRequest request, @RequestParam int idx);
@@ -26,5 +27,5 @@ public interface PostController {
     Post modifyPost(HttpServletRequest request,@RequestBody Post post);
 
     /* 글 삭제 */
-    ResponseEntity deletePost(@RequestParam int idx);
+    ResponseEntity deletePost(HttpServletRequest request, @RequestParam int idx);
 }

@@ -44,6 +44,17 @@ public class PostControllerImpl implements PostController{
         return list;
     }
 
+    /* 유저가 작성한 글 목록 조회 */
+    @Override
+    @GetMapping("/user/list")
+    public List<PostEntity> userPostList(HttpServletRequest request){
+        String userId = middleware.extractId(request);
+
+        List<PostEntity> list = postService.userPostList(userId);
+
+        return list;
+    }
+
     /* 글 상세 조회 */
     @Override
     @GetMapping("/detail")
@@ -60,16 +71,16 @@ public class PostControllerImpl implements PostController{
     public Post modifyPost(HttpServletRequest request, @RequestBody Post post){
         String userId = middleware.extractId(request);
 
-        // TODO: 작성한 유저인지 확인하기
         Post updatedPost = postService.modifyPost(post);
+
         return updatedPost;
     }
 
     /* 글 삭제 */
     @Override
     @GetMapping("/post")
-    public ResponseEntity deletePost(@RequestParam int idx){
-        // TODO: 작성한 유저인지 확인하기
+    public ResponseEntity deletePost(HttpServletRequest request, @RequestParam int idx){
+        String userId = middleware.extractId(request);
         boolean deletedResult = postService.deletePost(idx);
         return ResponseEntity.ok(HttpStatus.OK);
     }
