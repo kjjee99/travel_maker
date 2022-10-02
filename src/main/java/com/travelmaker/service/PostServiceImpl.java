@@ -65,10 +65,26 @@ public class PostServiceImpl implements PostService {
         return list;
     }
 
+    /* 유저가 작성한 글 목록 조회 */
+    @Override
+    public List<PostEntity> userPostList(String id){
+        List<PostEntity> list = repository.findByUserId(id);
+        // 저장된 게시글이 없는 경우
+        if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+
+        // 삭제된 글을 list에서 삭제
+        for(int i = 0; i < list.size(); i++){
+            if(list.get(i).getTitle() == null){
+                list.remove(i);
+                i--;
+            }
+        }
+        return list;
+    }
+
     /* 글 상세 조회*/
     @Override
     public Post showPost(int idx) {
-        // TODO: user_id -> string
         Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(idx)
                 // 찾는 게시글이 없는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));

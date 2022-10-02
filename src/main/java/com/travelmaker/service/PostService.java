@@ -16,7 +16,8 @@ public interface PostService {
     /* 글 전체 조회 */
     List<PostEntity> postList();
 
-    /* 사용자가 작성한 글 목록 조회*/
+    /* 유저가 작성한 글 목록 조회 */
+    List<PostEntity> userPostList(String id);
 
     /* 글 상세조회 */
     Post showPost(int idx);
