@@ -86,6 +86,7 @@ public class UserServiceImpl implements UserServcie{
                 .phone_number(user.getPhone_number())
                 .profile_img(user.getProfile_img())
                 .build();
+        // TODO: 유저가 쓴 게시글 조회
         return findUser;
     }
 
@@ -97,8 +98,9 @@ public class UserServiceImpl implements UserServcie{
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         // params
-        String userId = user.getId();
+        String userId = user.getId();   // 수정 안됨
         String email = user.getEmail();
+        // TODO: 비밀번호 변경 API
         String password = passwordEncoder.encode(user.getPassword());
         String phone_number = user.getPhone_number();
         String profile_img = user.getProfile_img();

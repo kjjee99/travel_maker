@@ -9,18 +9,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
 
     @Query(value="select user_id, title, content, like, figures, post_img, create_at" +
             "from post", nativeQuery = true)
-    Post findByIdx(int idx);
+    Optional<PostEntity> findByIdx(int idx);
 
     @Modifying
     @Query(value="update post set title=:title, content= :content, figures= :figures, post_img = :postImg" +
             "where id=:id", nativeQuery = true)
-    Post updatePost(@Param("id") int id,
+    Optional<PostEntity> updatePost(@Param("id") int id,    // userId
                     @Param("title") String title,
                     @Param("content") String content,
                     @Param("figures") String figures,
@@ -29,5 +30,5 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Modifying
     @Query(value = "update post set title=null, content=null, figures=null, post_img=null" +
             "where id=:id", nativeQuery = true)
-    int deletePost(@Param("id") int idx);
+    Optional<Integer> deletePost(@Param("id") int idx);
 }

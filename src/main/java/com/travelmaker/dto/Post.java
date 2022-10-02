@@ -9,20 +9,31 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * 게시글 관련 DTO
+ */
 
 @Data
 @NoArgsConstructor
 public class Post {
+    // TODO: 주석달기🌟
+    /** POST INDEX */
     private int id;
-    private int user_id;
+    /** 사용자 ID */
+    private String user_id;
+    /** 글 제목 */
     private String title;
+    /** 글 내용 */
     private String content;
+    /** 좋아요 개수 */
     private int like;
+    /** 추천도 */
     private String figures;
+    /** 글 사진(array)  */
     private String post_img;
 
     @Builder
-    public Post(int id, int user_id, String title, String content, int like, String figures, String post_img) {
+    public Post(int id, String user_id, String title, String content, int like, String figures, String post_img) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
