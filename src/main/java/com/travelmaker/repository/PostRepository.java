@@ -9,14 +9,17 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
 
-    @Query(value="select user_id, title, content, like, figures, post_img, create_at" +
-            "from post", nativeQuery = true)
-    Optional<PostEntity> findByIdx(int idx);
+    @Query(value="select * from post", nativeQuery = true)
+    Optional<PostEntity> findByIdx(int idx);    // 인덱스 번호
+
+    @Query(value = "select * from post where id = :id", nativeQuery = true)
+    List<PostEntity> findByUserId(@Param("id") String id);
 
     @Modifying
     @Query(value="update post set title=:title, content= :content, figures= :figures, post_img = :postImg" +
