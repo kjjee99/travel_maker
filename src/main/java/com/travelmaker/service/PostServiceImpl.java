@@ -2,14 +2,18 @@ package com.travelmaker.service;
 
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.PostEntity;
+import com.travelmaker.error.CustomException;
+import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.PostRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -23,14 +27,15 @@ public class PostServiceImpl implements PostService {
     public boolean writePost(Post post){
 
         PostEntity entity = PostEntity.builder()
-                // TODO: userId를 줄건지 id를 줄건지******
+                // TODO: userId로 바꾸기
                 .user_id(8)
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(0)
-                .figures(post.getFigures())
+                .figures(post.getFigures())     // 추천도
                 // TODO: 여러 개의 이미지 저장
-                // TODO: thumbnails
+                // TODO: 순서대로 저장
+                // TODO: AWS S3에 저장하기
                 .post_img(post.getPost_img())
                 .createdAt(new Date())
                 .build();
@@ -38,14 +43,18 @@ public class PostServiceImpl implements PostService {
         log.info(entity.toString());
         PostEntity savedPost = repository.save(entity);
 
-        if(savedPost == null)   return false;
+        if(savedPost.getTitle().isEmpty())   throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         return true;
     }
 
     /* 글 전체 목록 조회 */
     @Override
+    // TODO: 팔로우한 유저만 게시글 뜨기
     public List<PostEntity> postList(){
         List<PostEntity> list = repository.findAll();
+        // 저장된 게시글이 없는 경우
+        if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+
         // 삭제된 글을 list에서 삭제
         for(int i = 0; i < list.size(); i++){
             if(list.get(i).getTitle() == null){
@@ -60,34 +69,56 @@ public class PostServiceImpl implements PostService {
     @Override
     public Post showPost(int idx) {
         // TODO: user_id -> string
-        Post post = repository.findByIdx(idx);
-        return post;
+        Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(idx)
+                // 찾는 게시글이 없는 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+
+        PostEntity post = entity.get();
+        Post findPost = Post.builder().id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .like(post.getLike())
+                .figures(post.getFigures())
+                .post_img(post.getPost_img())
+                .build();
+
+        return findPost;
     }
 
     /* 글 수정 */
     @Override
     public Post modifyPost(Post post) {
-        Post findPost = repository.findByIdx(post.getId());
-        // TODO: 게시글이 존재하지 않을 때 ERROR
-        if(findPost == null){
-            return null;
-        }
-        Post updatedPost = repository.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getFigures(), post.getPost_img());
-        // TODO: Update 안됐을 때
-        if(updatedPost == null) {return null;}
+        Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(post.getId())
+                // 수정할 게시글이 존재하지 않는 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+
+        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getFigures(), post.getPost_img())
+                // 수정 시 오류가 발생한 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
+
+        Post updatedPost = Post.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .like(post.getLike())
+                .figures(post.getFigures())
+                // 주소로 변환된 값 반환
+                .post_img(updatedEntity.get().getPost_img())
+                .build();
+
         return updatedPost;
     }
 
     /* 글 삭제 */
     @Override
     public boolean deletePost(int idx) {
-        Post findPost = repository.findByIdx(idx);
-        // TODO: 게시글이 존재하지 않을 때 ERROR
-        if(findPost == null)    return false;
+        Optional<PostEntity> findPost = Optional.ofNullable(repository.findByIdx(idx)
+                // 삭제할 게시글이 없는 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        int deletedPost = repository.deletePost(idx);
-        // TODO: 게시글이 삭제되지 않았을 때 ERROR
-        if(deletedPost == -1)   return false;
+        Optional<Integer> deletedPost = Optional.ofNullable(repository.deletePost(idx)
+                // 삭제 시 오류가 발생한 경우
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
         return true;
     }
 }
