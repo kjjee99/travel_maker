@@ -34,4 +34,8 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value = "update post set title=null, content=null, figures=null, post_img=null" +
             "where id=:id", nativeQuery = true)
     Optional<Integer> deletePost(@Param("id") int idx);
+
+    @Modifying
+    @Query(value = "update post set like=:like where id=:id", nativeQuery = true)
+    Optional<Integer> updateLike(@Param("id") int idx, @Param("like") int like);
 }
