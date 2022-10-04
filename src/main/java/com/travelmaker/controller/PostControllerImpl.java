@@ -25,8 +25,6 @@ public class PostControllerImpl implements PostController{
     @PostMapping("/write")
     public ResponseEntity writePost(HttpServletRequest request, @RequestBody Post post) {
         String userId = middleware.extractId(request);
-        // TODO: Login Required Error
-        if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
         boolean savedResult = postService.writePost(post);
 
@@ -83,5 +81,15 @@ public class PostControllerImpl implements PostController{
         String userId = middleware.extractId(request);
         boolean deletedResult = postService.deletePost(idx);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 좋아요 반영 */
+    @Override
+    @GetMapping("/like")
+    public int updateLike(HttpServletRequest request, @RequestParam int idx, @RequestParam int like){
+        String userId = middleware.extractId(request);
+        // TODO: 사용자가 좋아요한 게시글 저장
+        int updatedLike = postService.updateLike(idx, like);
+        return updatedLike;
     }
 }

@@ -28,4 +28,8 @@ public interface PostController {
 
     /* 글 삭제 */
     ResponseEntity deletePost(HttpServletRequest request, @RequestParam int idx);
+
+    /* 좋아요 반영 */
+    int updateLike(HttpServletRequest request, @RequestParam int idx, @RequestParam int like);
+
 }
