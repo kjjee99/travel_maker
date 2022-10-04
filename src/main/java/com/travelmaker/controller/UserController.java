@@ -16,6 +16,9 @@ public interface UserController {
     /* 중복 아이디 확인 */
     ResponseEntity checkId(@RequestParam String id);
 
+    /* 비밀번호 확인 */
+    ResponseEntity checkPassword(String password, HttpServletRequest request, HttpServletResponse response);
+
     /* 로그인 */
     ResponseEntity login(@RequestBody User user, HttpServletResponse response);
 

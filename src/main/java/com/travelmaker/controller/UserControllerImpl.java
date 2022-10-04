@@ -45,7 +45,21 @@ public class UserControllerImpl implements UserController {
     @GetMapping("/check")
     @ResponseBody
     public ResponseEntity checkId(@RequestParam String id){
-        boolean check = service.checkId(id);
+        service.checkId(id);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 비밀번호 확인 */
+    @Override
+    @PostMapping("/checkpw")
+    @ResponseBody
+    public ResponseEntity checkPassword(@RequestBody String password, HttpServletRequest request, HttpServletResponse response){
+
+        // 쿠키에서 userId 찾기
+        String userId = middleware.extractId(request);
+
+        service.checkPassword(userId, password);
+
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -55,11 +69,6 @@ public class UserControllerImpl implements UserController {
     @ResponseBody
     public ResponseEntity login(@RequestBody User user, HttpServletResponse response){
         String id = service.login(user);
-
-        // TODO: error 발생
-        if(id == null){
-            return ResponseEntity.ok(HttpStatus.FORBIDDEN);
-        }
 
         // TODO: 쿠키 암호화
         // 쿠키 저장
@@ -96,11 +105,6 @@ public class UserControllerImpl implements UserController {
 
         // 쿠키에서 userId 찾기
         userId = middleware.extractId(request);
-
-        // TODO: 로그인이 필요하다는 Error
-        if(userId == null){
-            return null;
-        }
 
         // 프론트에서 받는 타입(json)
         return service.searchUser(userId);
