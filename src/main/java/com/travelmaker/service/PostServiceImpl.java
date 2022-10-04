@@ -137,4 +137,12 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
         return true;
     }
+
+    /* 좋아요 반영 */
+    @Override
+    public int updateLike(int idx, int like){
+        Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx, like)
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)) );
+        return entity.get();
+    }
 }

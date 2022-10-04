@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface PostService {
@@ -28,4 +29,7 @@ public interface PostService {
 
     /* 글 삭제 */
     boolean deletePost(int idx);
+
+    /* 좋아요 반영 */
+    int updateLike(int idx, int like);
 }
