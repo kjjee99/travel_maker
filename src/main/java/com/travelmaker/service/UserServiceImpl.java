@@ -52,23 +52,6 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-    /* 비밀번호 확인 */
-    // FIXME: 로그인과 같은 코드
-    @Override
-    public boolean checkPassword(String id, String password){
-        Optional<UserEntity> entity = Optional.ofNullable(
-                repository.findByUserId(id)
-                        .orElseThrow(() -> new CustomException(ErrorCode.INVALID_PASSWORD))
-        );
-        String userPW = entity.get().getPassword();
-        // 비밀번호가 같지 않을 경우
-        if(!passwordEncoder.matches(password, userPW)){
-            // ERROR 던지기
-            throw new CustomException(ErrorCode.INVALID_PASSWORD);
-        }
-        return true;
-    }
-
     /* 로그인 */
     @Override
     public String login(User user){

@@ -10,9 +10,6 @@ public interface UserService {
     /* 중복 아이디 확인 */
     boolean checkId(String id);
 
-    /* 비밀번호 확인 */
-    boolean checkPassword(String id, String password);
-
     /* 로그인 */
     String login(User user);
 
