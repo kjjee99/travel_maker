@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserControllerImpl implements UserController {
 
     @Autowired
@@ -49,7 +50,7 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    /* 비밀번호 확인 */
+    /* FIXME: 비밀번호 확인 */
     @Override
     @PostMapping("/checkpw")
     @ResponseBody
@@ -58,7 +59,11 @@ public class UserControllerImpl implements UserController {
         // 쿠키에서 userId 찾기
         String userId = middleware.extractId(request);
 
-        service.checkPassword(userId, password);
+        // TODO: login()
+        User user = User.builder().id(userId)
+                        .password(password)
+                                .build();
+        service.login(user);
 
         return ResponseEntity.ok(HttpStatus.OK);
     }
