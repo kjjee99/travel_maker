@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserControllerImpl implements UserController {
 
     @Autowired
@@ -33,10 +32,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity addUser(@RequestBody User user){
         boolean result = service.addUser(user);
 
-        // TODO: 중복 아이디 확인하기 or 중복 아이디 확인 api
-        if(!result){
-            return ResponseEntity.ok(HttpStatus.FORBIDDEN);
-        }
         // 성공했을 때
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -75,7 +70,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity login(@RequestBody User user, HttpServletResponse response){
         String id = service.login(user);
 
-        // TODO: 쿠키 암호화
         // 쿠키 저장
         Cookie cookie = new Cookie("userId", id);
         cookie.setMaxAge(60 * 60 * 3);   // 3 hours
@@ -121,9 +115,6 @@ public class UserControllerImpl implements UserController {
     @ResponseBody
     public ResponseEntity modifyUser(HttpServletRequest request,@RequestBody User user) {
         String userId = middleware.extractId(request);
-        // TODO: ERROR
-        // 로그인이 되어있지 않은 상태
-        if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
         boolean result = service.modifyUser(user);
         if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
@@ -139,8 +130,6 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response){
         // 쿠키에서 userId 찾기
         String userId = middleware.extractId(request);
-        // TODO: Login Required Error
-        if(userId == null)  return ResponseEntity.ok(HttpStatus.FORBIDDEN);
 
         boolean result = service.deleteUser(userId);
         if(!result) return ResponseEntity.ok(HttpStatus.FORBIDDEN);
