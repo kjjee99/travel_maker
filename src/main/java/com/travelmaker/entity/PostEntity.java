@@ -21,14 +21,13 @@ public class PostEntity {
     private int id;
 
     @Column(name = "user_id")
-    private int user_id;
+    private String user_id;
 
     @Column(name = "title")
     private String title;
 
     @Column(name = "content")
     private String content;
-
 
     @Column(name = "`like`")
     private int like;
@@ -42,7 +41,7 @@ public class PostEntity {
     private Date created_at;
 
     @Builder
-    public PostEntity(int id, int user_id, String title, String content, int like, String figures, String post_img, Date createdAt) {
+    public PostEntity(int id, String user_id, String title, String content, int like, String figures, String post_img, Date createdAt) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
