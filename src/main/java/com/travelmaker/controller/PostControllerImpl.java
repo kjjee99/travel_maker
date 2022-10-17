@@ -13,7 +13,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/post")
-@CrossOrigin(origins = "http://localhost:3000")
 public class PostControllerImpl implements PostController{
 
     @Autowired
@@ -27,6 +26,7 @@ public class PostControllerImpl implements PostController{
     public ResponseEntity writePost(HttpServletRequest request, @RequestBody Post post) {
         String userId = middleware.extractId(request);
 
+        post.setUser_id(userId);
         boolean savedResult = postService.writePost(post);
 
         return ResponseEntity.ok(HttpStatus.OK);
