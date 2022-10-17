@@ -1,12 +1,17 @@
 package com.travelmaker.service;
 
 import com.travelmaker.dto.Post;
+import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
+import com.travelmaker.entity.PostnHashtagEntity;
 import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
+import com.travelmaker.repository.HashtagRepository;
 import com.travelmaker.repository.PostRepository;
+import com.travelmaker.repository.PostnTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,13 +27,18 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository repository;
 
+    @Autowired
+    private HashtagRepository tagRepository;
+
+    @Autowired
+    private PostnTagRepository relationRepository;
+
     /* 글 작성 */
     @Override
     public boolean writePost(Post post){
 
         PostEntity entity = PostEntity.builder()
-                // TODO: userId로 바꾸기
-                .user_id(8)
+                .user_id(post.getUser_id())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(0)
@@ -40,11 +50,38 @@ public class PostServiceImpl implements PostService {
                 .createdAt(new Date())
                 .build();
 
-        log.info(entity.toString());
         PostEntity savedPost = repository.save(entity);
+
+        // SAVE HASHTAGS
+        saveHashtag(savedPost.getId(), post.getHashtags());
 
         if(savedPost.getTitle().isEmpty())   throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         return true;
+    }
+
+    public void saveHashtag(int postId, String[] hashtags){
+        for(String tag : hashtags){
+            Optional<HashtagEntity> entity = tagRepository.findByName(tag);
+            HashtagEntity findTag;
+            if(!entity.isPresent()){
+                // SAVE IN Hashtag table
+                HashtagEntity tagEntity = HashtagEntity.builder()
+                        .tag_name(tag)
+                        .build();
+                HashtagEntity savedTag = tagRepository.save(tagEntity);
+                // ERROR: 저장이 안되었을 경우
+                if(savedTag.getTag_name().isEmpty())
+                    throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+                findTag = savedTag;
+            }
+            else findTag = entity.get();
+            // SAVE IN Matching table
+            PostnHashtagEntity relation = PostnHashtagEntity.builder()
+                    .postId(postId)
+                    .tagId(findTag.getId())
+                    .build();
+            relationRepository.save(relation);
+        }
     }
 
     /* 글 전체 목록 조회 */
@@ -82,7 +119,7 @@ public class PostServiceImpl implements PostService {
         return list;
     }
 
-    /* 글 상세 조회*/
+    /* 글 상세 조회 */
     @Override
     public Post showPost(int idx) {
         Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(idx)
