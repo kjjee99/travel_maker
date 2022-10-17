@@ -31,6 +31,8 @@ public class Post {
     private String figures;
     /** 글 사진(array)  */
     private String post_img;
+    /** 해시태그 */
+    private String[] hashtags;
 
     @Builder
     public Post(int id, String user_id, String title, String content, int like, String figures, String post_img) {
@@ -41,5 +43,17 @@ public class Post {
         this.like = like;
         this.figures = figures;
         this.post_img = post_img;
+    }
+
+    @Builder
+    public Post(int id, String user_id, String title, String content, int like, String figures, String post_img, String[] hashtags) {
+        this.id = id;
+        this.user_id = user_id;
+        this.title = title;
+        this.content = content;
+        this.like = like;
+        this.figures = figures;
+        this.post_img = post_img;
+        this.hashtags = hashtags;
     }
 }
