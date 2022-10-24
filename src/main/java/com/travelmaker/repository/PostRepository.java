@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,12 +14,16 @@ import java.util.Optional;
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
 
-    @Query(value="select * from post", nativeQuery = true)
+    // 상세조회
+    @Query(value="select * from post where id=:idx", nativeQuery = true)
     Optional<PostEntity> findByIdx(int idx);    // 인덱스 번호
 
+    // 유저가 작성한 글 조회
     @Query(value = "select * from post where user_id = :id", nativeQuery = true)
     List<PostEntity> findByUserId(@Param("id") String id);
 
+    // 수정
+    @Transactional
     @Modifying
     @Query(value="update post set title=:title, content= :content, figures= :figures, post_img = :postImg" +
             "where id=:id", nativeQuery = true)
@@ -28,17 +33,23 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
                     @Param("figures") String figures,
                     @Param("postImg") String postImg);
 
+    // 삭제
+    @Transactional
     @Modifying
     @Query(value = "update post set title=null, content=null, figures=null, post_img=null" +
             "where id=:id", nativeQuery = true)
     Optional<Integer> deletePost(@Param("id") int idx);
 
+    // 좋아요 반영
+    @Transactional
     @Modifying
-    @Query(value = "update post set like=:like where id=:id", nativeQuery = true)
+    @Query(value = "update post set `like`=:like where id=:id", nativeQuery = true)
     Optional<Integer> updateLike(@Param("id") int idx, @Param("like") int like);
 
-    @Query(value = "select * from post " +
-            "where id = (select post_id from post_hashtag" +
-            "where tag_id = (select id from hashtags where tag_name = '%:name%'))", nativeQuery = true)
+    // 해시태그 검색
+    @Query(value = "select * from post where id = " +
+            "(select post_id from post_hashtag where tag_id in " +
+            "(select id from hashtags where tag_name like concat('%', :name, '%')))", nativeQuery = true)
     List<PostEntity> findByKeyword(@Param("name") String name);
+
 }
