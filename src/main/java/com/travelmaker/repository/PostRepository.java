@@ -16,7 +16,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value="select * from post", nativeQuery = true)
     Optional<PostEntity> findByIdx(int idx);    // 인덱스 번호
 
-    @Query(value = "select * from post where id = :id", nativeQuery = true)
+    @Query(value = "select * from post where user_id = :id", nativeQuery = true)
     List<PostEntity> findByUserId(@Param("id") String id);
 
     @Modifying
