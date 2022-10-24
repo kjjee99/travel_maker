@@ -34,7 +34,7 @@ public interface UserController {
     ResponseEntity modifyUser(HttpServletRequest request, @RequestBody User user);
 
     /* 회원 탈퇴 */
-    ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response);
+    ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User user);
 
     /* 회원 검색 */
     List<UserEntity> searchUser(@RequestParam String word);
