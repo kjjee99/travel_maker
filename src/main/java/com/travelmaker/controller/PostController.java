@@ -32,4 +32,6 @@ public interface PostController {
     /* 좋아요 반영 */
     int updateLike(HttpServletRequest request, @RequestParam int idx, @RequestParam int like);
 
+    /* 검색 */
+    List<PostEntity> searchByKeyword(HttpServletRequest request,@RequestParam String word);
 }

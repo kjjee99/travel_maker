@@ -93,4 +93,13 @@ public class PostControllerImpl implements PostController{
         int updatedLike = postService.updateLike(idx, like);
         return updatedLike;
     }
+
+    /* 검색 */
+    @Override
+    @GetMapping("/search")
+    public List<PostEntity> searchByKeyword(HttpServletRequest request,@RequestParam String word){
+        middleware.extractId(request);
+
+        return postService.searchByKeyword(word);
+    }
 }
