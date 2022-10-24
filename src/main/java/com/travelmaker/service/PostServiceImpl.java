@@ -59,6 +59,8 @@ public class PostServiceImpl implements PostService {
         return true;
     }
 
+    /* 해시태그 저장 */
+    @Override
     public void saveHashtag(int postId, String[] hashtags){
         for(String tag : hashtags){
             Optional<HashtagEntity> entity = tagRepository.findByName(tag);
@@ -181,5 +183,15 @@ public class PostServiceImpl implements PostService {
         Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx, like)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)) );
         return entity.get();
+    }
+
+    /* 검색 */
+    @Override
+    public List<PostEntity> searchByKeyword(String word){
+        List<PostEntity> postIds = repository.findByKeyword(word);
+        // ERROR: 검색한 값이 없을 때
+        if(postIds.size() == 0 )    throw new CustomException(ErrorCode.NULL_VALUE);
+
+        return postIds;
     }
 }

@@ -2,17 +2,15 @@ package com.travelmaker.service;
 
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.PostEntity;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface PostService {
 
     /*글 작성*/
     boolean writePost(Post post);
+
+    /* 해시태그 저장 */
+    void saveHashtag(int postId, String[] hashtags);
 
     /* 글 전체 조회 */
     List<PostEntity> postList();
@@ -23,7 +21,6 @@ public interface PostService {
     /* 글 상세조회 */
     Post showPost(int idx);
 
-
     /* 글 수정 */
     Post modifyPost(Post post);
 
@@ -32,4 +29,7 @@ public interface PostService {
 
     /* 좋아요 반영 */
     int updateLike(int idx, int like);
+
+    /* 검색 */
+    List<PostEntity> searchByKeyword(String word);
 }
