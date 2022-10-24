@@ -100,24 +100,34 @@ public class UserServiceImpl implements UserService{
                 // userId가 없는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
-        // params
-        String userId = user.getId();   // 수정 안됨
-        String email = user.getEmail();
-        // TODO: 비밀번호 변경 API
-        String password = passwordEncoder.encode(user.getPassword());
-        String phone_number = user.getPhone_number();
-        String profile_img = user.getProfile_img();
-        String role = user.getRole();
+        UserEntity findUser = entity.get();
 
-        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(userId, email, password, phone_number, profile_img, role)
+        String password = passwordEncoder.encode(user.getPassword());
+        // 비밀번호 맞는지 확인하기
+        checkPassword(password, findUser.getPassword());
+
+        // params
+        String userId = user.getId().isEmpty() ? findUser.getUser_id() : user.getId();   // 수정 안됨
+        String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
+        String phone_number = user.getPhone_number().isEmpty() ? findUser.getPhone_number() : user.getPhone_number();
+        String profile_img = user.getProfile_img().isEmpty() ? findUser.getProfile_img() : user.getProfile_img();
+
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(userId, email, password, phone_number, profile_img)
                 // 수정되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
         return true;
     }
 
+    /* 비밀번호 확인 */
+    public boolean checkPassword(String password, String compare){
+        if(!passwordEncoder.matches(password, compare))
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        return true;
+    }
+
     /* 회원 탈퇴 */
-    public boolean deleteUser(String userId){
+    public boolean deleteUser(String userId, String password){
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
