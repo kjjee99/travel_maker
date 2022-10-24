@@ -1,6 +1,9 @@
 package com.travelmaker.service;
 
 import com.travelmaker.dto.User;
+import com.travelmaker.entity.UserEntity;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -21,4 +24,7 @@ public interface UserService {
 
     /* 회원 탈퇴 */
     boolean deleteUser(String userId);
+
+    /* 회원 검색 */
+    List<UserEntity> searchUserByKeyword(String word);
 }

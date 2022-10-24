@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -126,5 +127,15 @@ public class UserServiceImpl implements UserService{
                 // 삭제되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
         return true;
+    }
+
+    /* 회원 검색 */
+    @Override
+    public List<UserEntity> searchUserByKeyword(String word){
+        List<UserEntity> list = repository.findByKeyword(word);
+        // ERROR: 값이 존재하지 않을 때
+        if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+
+        return list;
     }
 }
