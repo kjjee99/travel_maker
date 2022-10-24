@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -34,11 +35,16 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
                           @Param("profileImg") String profileImg,
                           @Param("role") String role);
 
-    // 회원 탈
+    // 회원 탈퇴
     @Transactional
     @Modifying
     @Query(value = "UPDATE user u SET u.user_id=null, u.email=null, u.password=null," +
             "u.phone_number=null, u.profile_img=null, u.role=null " +
             "where u.user_id = :userId", nativeQuery = true)
     Optional<Integer> deleteByUserId(@Param("userId") String userId);
+
+    // 회원 검색
+    @Query(value = "select * from user " +
+            "where user_id like concat('%', :word, '%')", nativeQuery = true)
+    List<UserEntity> findByKeyword(@Param("word") String word);
 }
