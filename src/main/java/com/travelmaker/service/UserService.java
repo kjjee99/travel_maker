@@ -23,7 +23,7 @@ public interface UserService {
     boolean modifyUser(User user);
 
     /* 회원 탈퇴 */
-    boolean deleteUser(String userId);
+    boolean deleteUser(String userId, String password);
 
     /* 회원 검색 */
     List<UserEntity> searchUserByKeyword(String word);
