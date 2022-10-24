@@ -130,6 +130,7 @@ public class PostServiceImpl implements PostService {
 
         PostEntity post = entity.get();
         Post findPost = Post.builder().id(post.getId())
+                .user_id(post.getUser_id())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(post.getLike())
