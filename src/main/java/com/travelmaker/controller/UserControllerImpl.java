@@ -1,6 +1,7 @@
 package com.travelmaker.controller;
 
 import com.travelmaker.dto.User;
+import com.travelmaker.entity.UserEntity;
 import com.travelmaker.repository.UserRepository;
 import com.travelmaker.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -144,5 +146,11 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /* 회원 검색 */
+    @Override
+    @GetMapping("/user")
+    public List<UserEntity> searchUser(@RequestParam String word){
+        return service.searchUserByKeyword(word);
+    }
     // 비밀번호 찾기 => 추가 기능
 }

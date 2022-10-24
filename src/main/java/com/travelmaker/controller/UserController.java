@@ -1,12 +1,14 @@
 package com.travelmaker.controller;
 
 import com.travelmaker.dto.User;
+import com.travelmaker.entity.UserEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 public interface UserController {
 
@@ -33,4 +35,7 @@ public interface UserController {
 
     /* 회원 탈퇴 */
     ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response);
+
+    /* 회원 검색 */
+    List<UserEntity> searchUser(@RequestParam String word);
 }
