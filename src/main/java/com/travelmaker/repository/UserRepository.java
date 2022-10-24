@@ -26,14 +26,13 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query(value = "UPDATE user u SET u.user_id = :userId, " +
             "u.email = :email, u.password = :password, " +
             "u.phone_number = :phone_number," +
-            "u.profile_img = :profileImg, u.role = :role " +
+            "u.profile_img = :profileImg " +
             "where user_id = :userId", nativeQuery = true)
     Optional<Integer> updateUser(@Param("userId") String userId,
                           @Param("email") String email,
                           @Param("password") String password,
                           @Param("phone_number") String phone_number,
-                          @Param("profileImg") String profileImg,
-                          @Param("role") String role);
+                          @Param("profileImg") String profileImg);
 
     // 회원 탈퇴
     @Transactional
