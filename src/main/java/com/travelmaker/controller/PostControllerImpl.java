@@ -56,8 +56,8 @@ public class PostControllerImpl implements PostController{
 
     /* 글 상세 조회 */
     @Override
-    @GetMapping("/detail")
-    public Post showPost(HttpServletRequest request, @RequestParam int idx){
+    @GetMapping("/detail/{id}")
+    public Post showPost(HttpServletRequest request, @PathVariable("id") int idx){
         String userId = middleware.extractId(request);
 
         Post post = postService.showPost(idx);
@@ -66,7 +66,7 @@ public class PostControllerImpl implements PostController{
 
     /* 글 수정 */
     @Override
-    @PostMapping("/post")
+    @PostMapping("/")
     public Post modifyPost(HttpServletRequest request, @RequestBody Post post){
         String userId = middleware.extractId(request);
 
@@ -77,7 +77,7 @@ public class PostControllerImpl implements PostController{
 
     /* 글 삭제 */
     @Override
-    @GetMapping("/post")
+    @GetMapping("/")
     public ResponseEntity deletePost(HttpServletRequest request, @RequestParam int idx){
         String userId = middleware.extractId(request);
         boolean deletedResult = postService.deletePost(idx);
@@ -96,7 +96,7 @@ public class PostControllerImpl implements PostController{
 
     /* 검색 */
     @Override
-    @GetMapping("/search")
+    @GetMapping("/tag")
     public List<PostEntity> searchByKeyword(HttpServletRequest request,@RequestParam String word){
         middleware.extractId(request);
 

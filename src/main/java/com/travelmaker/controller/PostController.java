@@ -3,6 +3,7 @@ package com.travelmaker.controller;
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.PostEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,7 +22,7 @@ public interface PostController {
     List<PostEntity> userPostList(HttpServletRequest request);
 
     /* 글 상세조회 */
-    Post showPost(HttpServletRequest request, @RequestParam int idx);
+    Post showPost(HttpServletRequest request, @PathVariable int idx);
 
     /* 글 수정 */
     Post modifyPost(HttpServletRequest request,@RequestBody Post post);
