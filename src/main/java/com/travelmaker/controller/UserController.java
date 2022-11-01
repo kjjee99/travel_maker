@@ -2,7 +2,9 @@ package com.travelmaker.controller;
 
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,9 +20,6 @@ public interface UserController {
     /* 중복 아이디 확인 */
     ResponseEntity checkId(@RequestParam String id);
 
-    /* 비밀번호 확인 */
-    ResponseEntity checkPassword(String password, HttpServletRequest request, HttpServletResponse response);
-
     /* 로그인 */
     ResponseEntity login(@RequestBody User user, HttpServletResponse response);
 
@@ -28,13 +27,13 @@ public interface UserController {
     ResponseEntity logout(HttpServletResponse response);
 
     /* 유저 정보 조회 */
-    User searchUser(HttpServletRequest request);
+    ResponseEntity searchUser(@CookieValue("userId") String userId, HttpServletRequest request);
 
     /* 유저 정보 수정 */
-    ResponseEntity modifyUser(HttpServletRequest request, @RequestBody User user);
+    ResponseEntity modifyUser(@CookieValue("userId") String userId, HttpServletRequest request, @RequestBody User user);
 
     /* 회원 탈퇴 */
-    ResponseEntity deleteUser(HttpServletRequest request, HttpServletResponse response, @RequestBody User user);
+    ResponseEntity deleteUser(@CookieValue("userId") String userId, HttpServletRequest request, HttpServletResponse response, @RequestBody User user);
 
     /* 회원 검색 */
     List<UserEntity> searchUser(@RequestParam String word);
