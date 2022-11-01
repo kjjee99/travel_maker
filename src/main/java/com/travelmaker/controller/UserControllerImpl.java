@@ -86,9 +86,8 @@ public class UserControllerImpl implements UserController {
     @Override
     @PostMapping("/user")
     public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId, HttpServletRequest request,@RequestBody User user) {
-
-        // TODO: 수정된 정보 반환
-        return ResponseEntity.ok(service.modifyUser(user));
+        service.modifyUser(user);
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /* 회원 탈퇴 */
