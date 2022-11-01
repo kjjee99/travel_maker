@@ -43,7 +43,9 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<Integer> deleteByUserId(@Param("userId") String userId);
 
     // 회원 검색
+    // TODO: top 10
     @Query(value = "select * from user " +
-            "where user_id like concat('%', :word, '%')", nativeQuery = true)
+            "where user_id like concat('%', :word, '%')" +
+            "order by user_id limit 10", nativeQuery = true)
     List<UserEntity> findByKeyword(@Param("word") String word);
 }
