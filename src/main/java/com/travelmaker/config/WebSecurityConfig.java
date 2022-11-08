@@ -7,8 +7,12 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,26 +20,31 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig implements WebMvcConfigurer {
     @Bean
     public PasswordEncoder getPasswordEncoder(){
         return new BCryptPasswordEncoder();
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception{
-        http.cors().configurationSource(request -> {
-            CorsConfiguration cors = new CorsConfiguration();
-            cors.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-            cors.setAllowedMethods(Arrays.asList("GET", "POST"));
-            cors.setAllowedHeaders(Arrays.asList("*"));
-            cors.setAllowCredentials(true);
-            return cors;
-        });
-
-        http.authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
-
-        http.csrf().disable();
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new UserInterceptor())
+                .addPathPatterns("*");
+        // excludePathPatterns("/board");
     }
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("*")
+                .allowedOrigins("http://localhost:3000")
+                .allowedMethods("GET", "POST")
+                .allowCredentials(true);
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+        return http.build();
+    }
+
 }
