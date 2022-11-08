@@ -15,7 +15,7 @@ import java.util.List;
 public interface UserController {
 
     /* 회원가입 */
-    ResponseEntity addUser(@RequestBody User user);
+    ResponseEntity addUser(@RequestBody User user, HttpServletResponse response);
 
     /* 중복 아이디 확인 */
     ResponseEntity checkId(@RequestParam String id);

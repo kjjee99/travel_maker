@@ -5,6 +5,7 @@ import com.travelmaker.entity.UserEntity;
 import com.travelmaker.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,20 @@ public class UserControllerImpl implements UserController {
     /* 회원가입 */
     @Override
     @PostMapping("/register")
-    public ResponseEntity addUser(@RequestBody User user){
+    public ResponseEntity addUser(@RequestBody User user, HttpServletResponse response){
         boolean result = service.addUser(user);
+
+        // 자동 로그인
+        if(result){
+            // 쿠키 저장
+            ResponseCookie cookie = ResponseCookie.from("userId", user.getId())
+                    .maxAge(60 * 60 * 3)   // 3 hours
+                    .path("/")            // 모든 경로에서 접근 가능
+                    .httpOnly(true)       // 브라우저에서 쿠키 접근 X
+                    .build();
+
+            response.setHeader("Set-Cookie", cookie.toString());
+        }
 
         // 성공했을 때
         return ResponseEntity.ok(HttpStatus.OK);
@@ -55,8 +68,7 @@ public class UserControllerImpl implements UserController {
         .httpOnly(true)       // 브라우저에서 쿠키 접근 X
         .build();
 
-        response.addHeader("Set-Cookie", cookie.toString());
-
+        response.setHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
