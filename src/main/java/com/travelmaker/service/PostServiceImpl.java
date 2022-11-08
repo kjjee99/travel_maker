@@ -47,6 +47,7 @@ public class PostServiceImpl implements PostService {
                 // TODO: 순서대로 저장
                 // TODO: AWS S3에 저장하기
                 .post_img(post.getPost_img())
+                .roads(post.getRecommendRoutes())
                 .createdAt(new Date())
                 .build();
 
@@ -136,6 +137,7 @@ public class PostServiceImpl implements PostService {
                 .like(post.getLike())
                 .figures(post.getFigures())
                 .post_img(post.getPost_img())
+                .roads(post.getRoads())
                 .build();
 
         return findPost;
@@ -148,7 +150,7 @@ public class PostServiceImpl implements PostService {
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getFigures(), post.getPost_img())
+        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPost_img())
                 // 수정 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
@@ -160,6 +162,7 @@ public class PostServiceImpl implements PostService {
                 .figures(post.getFigures())
                 // 주소로 변환된 값 반환
                 .post_img(updatedEntity.get().getPost_img())
+                .roads(post.getRecommendRoutes())
                 .build();
 
         return updatedPost;
