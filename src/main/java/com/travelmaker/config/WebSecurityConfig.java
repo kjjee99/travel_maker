@@ -29,7 +29,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new UserInterceptor())
-                .addPathPatterns("*");
+                .addPathPatterns("/*");
         // excludePathPatterns("/board");
     }
 
