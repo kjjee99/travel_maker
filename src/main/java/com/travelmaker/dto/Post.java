@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import java.util.List;
 
 /**
  * 게시글 관련 DTO
@@ -28,14 +29,18 @@ public class Post {
     /** 좋아요 개수 */
     private int like;
     /** 추천도 */
-    private String figures;
+    private Figures figures;
     /** 글 사진(array)  */
     private String post_img;
+
+    /** 추천 경로 */
+    private List<Roads> recommendRoutes;
+
     /** 해시태그 */
     private String[] hashtags;
 
     @Builder
-    public Post(int id, String user_id, String title, String content, int like, String figures, String post_img) {
+    public Post(int id, String user_id, String title, String content, int like, Figures figures, String post_img, List<Roads> roads) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
@@ -43,10 +48,11 @@ public class Post {
         this.like = like;
         this.figures = figures;
         this.post_img = post_img;
+        this.recommendRoutes = roads;
     }
 
     @Builder
-    public Post(int id, String user_id, String title, String content, int like, String figures, String post_img, String[] hashtags) {
+    public Post(int id, String user_id, String title, String content, int like, Figures figures, String post_img, List<Roads> roads, String[] hashtags) {
         this.id = id;
         this.user_id = user_id;
         this.title = title;
@@ -54,6 +60,7 @@ public class Post {
         this.like = like;
         this.figures = figures;
         this.post_img = post_img;
+        this.recommendRoutes = roads;
         this.hashtags = hashtags;
     }
 }
