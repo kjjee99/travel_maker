@@ -2,6 +2,8 @@ package com.travelmaker.controller;
 
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.PostEntity;
+import com.travelmaker.error.CustomException;
+import com.travelmaker.error.ErrorCode;
 import com.travelmaker.service.PostServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.coyote.Response;
@@ -27,6 +29,7 @@ public class PostControllerImpl implements PostController{
     @PostMapping("/write")
     public ResponseEntity writePost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestBody Post post) {
         post.setUser_id(userId);
+        // TODO : 경로 저장
         boolean savedResult = postService.writePost(post);
 
         return ResponseEntity.ok(HttpStatus.OK);
@@ -36,6 +39,9 @@ public class PostControllerImpl implements PostController{
     @Override
     @GetMapping("/list")
     public ResponseEntity<?> postList(HttpServletRequest request, @CookieValue("userId") String userId){
+        // TODO: Pagination -> 마지막에 보낼 데이터 정하기(더 이상 찾을 수 없을 때)
+        if(userId == null) throw new CustomException(ErrorCode.LOGIN_REQUIRED);
+
         List<PostEntity> list = postService.postList();
 
         return ResponseEntity.ok(list);
@@ -43,9 +49,9 @@ public class PostControllerImpl implements PostController{
 
     /* 유저가 작성한 글 목록 조회 */
     @Override
-    @GetMapping("/user/list")
-    public ResponseEntity<?> userPostList(HttpServletRequest request, @CookieValue("userId") String userId){
-        List<PostEntity> list = postService.userPostList(userId);
+    @GetMapping("/user/list/{id}")
+    public ResponseEntity<?> userPostList(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") String id){
+        List<PostEntity> list = postService.userPostList(id);
 
         return ResponseEntity.ok(list);
     }
@@ -60,8 +66,8 @@ public class PostControllerImpl implements PostController{
 
     /* 글 수정 */
     @Override
-    @PostMapping("/")
-    public ResponseEntity<?> modifyPost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestBody Post post){
+    @PostMapping("/{id}")
+    public ResponseEntity<?> modifyPost(HttpServletRequest request, @PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post){
         Post updatedPost = postService.modifyPost(post);
 
         return ResponseEntity.ok(updatedPost);
@@ -69,9 +75,9 @@ public class PostControllerImpl implements PostController{
 
     /* 글 삭제 */
     @Override
-    @GetMapping("/")
-    public ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx){
-        boolean deletedResult = postService.deletePost(idx);
+    @GetMapping("/{id}")
+    public ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") int id){
+        boolean deletedResult = postService.deletePost(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

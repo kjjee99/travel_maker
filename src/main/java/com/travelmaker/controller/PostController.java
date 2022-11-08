@@ -20,16 +20,16 @@ public interface PostController {
     ResponseEntity postList(HttpServletRequest request, @CookieValue("userId") String userId);
 
     /* 유저가 작성한 글 목록 조회 */
-    ResponseEntity userPostList(HttpServletRequest request, @CookieValue("userId") String userId);
+    ResponseEntity userPostList(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") String id);
 
     /* 글 상세조회 */
     ResponseEntity showPost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable int idx);
 
     /* 글 수정 */
-    ResponseEntity modifyPost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestBody Post post);
+    ResponseEntity modifyPost(HttpServletRequest request, @PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post);
 
     /* 글 삭제 */
-    ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx);
+    ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable int id);
 
     /* 좋아요 반영 */
     int updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
