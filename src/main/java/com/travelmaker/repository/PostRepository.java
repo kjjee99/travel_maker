@@ -36,9 +36,8 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     // 삭제
     @Transactional
     @Modifying
-    @Query(value = "update post set title=null, content=null, figures=null, post_img=null" +
-            "where id=:id", nativeQuery = true)
-    Optional<Integer> deletePost(@Param("id") int idx);
+    @Query(value = "delete from post where id=:id", nativeQuery = true)
+    Optional<Integer> deletePost(@Param("id") int id);
 
     // 좋아요 반영
     @Transactional
