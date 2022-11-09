@@ -84,16 +84,17 @@ public class PostControllerImpl implements PostController{
     /* 좋아요 반영 */
     @Override
     @GetMapping("/like")
-    public int updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
+    public ResponseEntity updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
         // TODO: 사용자가 좋아요한 게시글 저장
         int updatedLike = postService.updateLike(idx, like);
-        return updatedLike;
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     /* 검색 */
     @Override
     @GetMapping("/tag")
-    public List<PostEntity> searchByKeyword(HttpServletRequest request,@CookieValue("userId") String userId, @RequestParam String word){
-        return postService.searchByKeyword(word);
+    public ResponseEntity searchByKeyword(HttpServletRequest request,@CookieValue("userId") String userId, @RequestParam String word){
+        List<PostEntity> list =  postService.searchByKeyword(word);
+        return ResponseEntity.ok(list);
     }
 }

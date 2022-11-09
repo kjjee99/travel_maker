@@ -32,8 +32,8 @@ public interface PostController {
     ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable int id);
 
     /* 좋아요 반영 */
-    int updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
+    ResponseEntity updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
 
     /* 검색 */
-    List<PostEntity> searchByKeyword(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam String word);
+    ResponseEntity searchByKeyword(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam String word);
 }
