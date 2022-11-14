@@ -14,26 +14,26 @@ import java.util.List;
 public interface PostController {
 
     /* 글 작성 */
-    ResponseEntity writePost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestBody Post post);
+    ResponseEntity writePost(@CookieValue("userId") String userId, @RequestBody Post post);
 
     /* 글 전체 조회 */
-    ResponseEntity postList(HttpServletRequest request, @CookieValue("userId") String userId);
+    ResponseEntity postList(@CookieValue("userId") String userId);
 
     /* 유저가 작성한 글 목록 조회 */
-    ResponseEntity userPostList(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") String id);
+    ResponseEntity userPostList(@CookieValue("userId") String userId, @PathVariable("id") String id);
 
     /* 글 상세조회 */
-    ResponseEntity showPost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable int idx);
+    ResponseEntity showPost(@CookieValue("userId") String userId, @PathVariable int idx);
 
     /* 글 수정 */
-    ResponseEntity modifyPost(HttpServletRequest request, @PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post);
+    ResponseEntity modifyPost(@PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post);
 
     /* 글 삭제 */
-    ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable int id);
+    ResponseEntity deletePost(@CookieValue("userId") String userId, @PathVariable int id);
 
     /* 좋아요 반영 */
-    ResponseEntity updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
+    ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
 
     /* 검색 */
-    ResponseEntity searchByKeyword(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam String word);
+    ResponseEntity searchByKeyword(@CookieValue("userId") String userId, @RequestParam String word);
 }

@@ -27,7 +27,7 @@ public class PostControllerImpl implements PostController{
     /* 글 작성 */
     @Override
     @PostMapping("/write")
-    public ResponseEntity writePost(HttpServletRequest request, @CookieValue("userId") String userId, @RequestBody Post post) {
+    public ResponseEntity writePost(@CookieValue("userId") String userId, @RequestBody Post post) {
         post.setUser_id(userId);
         // TODO : 경로 저장
         boolean savedResult = postService.writePost(post);
@@ -38,7 +38,7 @@ public class PostControllerImpl implements PostController{
     /* 글 전체 목록 조회*/
     @Override
     @GetMapping("/list")
-    public ResponseEntity<?> postList(HttpServletRequest request, @CookieValue("userId") String userId){
+    public ResponseEntity<?> postList(@CookieValue("userId") String userId){
         // TODO: Pagination -> 마지막에 보낼 데이터 정하기(더 이상 찾을 수 없을 때)
         if(userId == null) throw new CustomException(ErrorCode.LOGIN_REQUIRED);
 
@@ -50,7 +50,7 @@ public class PostControllerImpl implements PostController{
     /* 유저가 작성한 글 목록 조회 */
     @Override
     @GetMapping("/user/list/{id}")
-    public ResponseEntity<?> userPostList(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") String id){
+    public ResponseEntity<?> userPostList(@CookieValue("userId") String userId, @PathVariable("id") String id){
         List<PostEntity> list = postService.userPostList(id);
 
         return ResponseEntity.ok(list);
@@ -59,7 +59,7 @@ public class PostControllerImpl implements PostController{
     /* 글 상세 조회 */
     @Override
     @GetMapping("/detail/{id}")
-    public ResponseEntity<?> showPost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") int idx){
+    public ResponseEntity<?> showPost(@CookieValue("userId") String userId, @PathVariable("id") int idx){
         Post post = postService.showPost(idx);
         return ResponseEntity.ok(post);
     }
@@ -67,7 +67,7 @@ public class PostControllerImpl implements PostController{
     /* 글 수정 */
     @Override
     @PostMapping("/{id}")
-    public ResponseEntity<?> modifyPost(HttpServletRequest request, @PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post){
+    public ResponseEntity<?> modifyPost(@PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post){
         Post updatedPost = postService.modifyPost(post);
 
         return ResponseEntity.ok(updatedPost);
@@ -76,7 +76,7 @@ public class PostControllerImpl implements PostController{
     /* 글 삭제 */
     @Override
     @GetMapping("/{id}")
-    public ResponseEntity deletePost(HttpServletRequest request, @CookieValue("userId") String userId, @PathVariable("id") int id){
+    public ResponseEntity deletePost(@CookieValue("userId") String userId, @PathVariable("id") int id){
         boolean deletedResult = postService.deletePost(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -84,7 +84,7 @@ public class PostControllerImpl implements PostController{
     /* 좋아요 반영 */
     @Override
     @GetMapping("/like")
-    public ResponseEntity updateLike(HttpServletRequest request, @CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
+    public ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
         // TODO: 사용자가 좋아요한 게시글 저장
         int updatedLike = postService.updateLike(idx, like);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -93,7 +93,7 @@ public class PostControllerImpl implements PostController{
     /* 검색 */
     @Override
     @GetMapping("/tag")
-    public ResponseEntity searchByKeyword(HttpServletRequest request,@CookieValue("userId") String userId, @RequestParam String word){
+    public ResponseEntity searchByKeyword(@CookieValue("userId") String userId, @RequestParam String word){
         List<PostEntity> list =  postService.searchByKeyword(word);
         return ResponseEntity.ok(list);
     }
