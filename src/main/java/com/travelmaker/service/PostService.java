@@ -1,6 +1,7 @@
 package com.travelmaker.service;
 
 import com.travelmaker.dto.Post;
+import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
 import java.util.List;
 
@@ -30,6 +31,9 @@ public interface PostService {
     /* 좋아요 반영 */
     int updateLike(int idx, int like);
 
-    /* 검색 */
-    List<PostEntity> searchByKeyword(String word);
+    /* Hashtag 목록 검색 */
+    List<HashtagEntity> searchByKeyword(String keyword);
+
+    /* Hashtag 검색 */
+    List<PostEntity> searchByHashtag(String word);
 }

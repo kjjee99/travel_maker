@@ -189,10 +189,20 @@ public class PostServiceImpl implements PostService {
         return entity.get();
     }
 
-    /* 검색 */
+    /* Hashtag 목록 검색 */
     @Override
-    public List<PostEntity> searchByKeyword(String word){
-        List<PostEntity> postIds = repository.findByKeyword(word);
+    public List<HashtagEntity> searchByKeyword(String keyword){
+        List<HashtagEntity> hashtags = repository.findHashtagsByKeyword(keyword);
+        if(hashtags.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+
+        // 총 10개
+        return hashtags.subList(0, 9);
+    }
+
+    /* Hashtag 검색 */
+    @Override
+    public List<PostEntity> searchByHashtag(String word){
+        List<PostEntity> postIds = repository.findPostsByKeyword(word);
         // ERROR: 검색한 값이 없을 때
         if(postIds.size() == 0 )    throw new CustomException(ErrorCode.NULL_VALUE);
 
