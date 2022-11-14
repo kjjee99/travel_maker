@@ -43,9 +43,9 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<Integer> deleteByUserId(@Param("userId") String userId);
 
     // 회원 검색
-    // TODO: top 10
-    @Query(value = "select * from user " +
-            "where user_id like concat('%', :word, '%')" +
-            "order by user_id limit 10", nativeQuery = true)
+    // TODO: limit 10
+    @Query(value = "select new com.travelmaker.entity.UserEntity(u.id, u.user_id, u.profile_img) from UserEntity u " +
+            "where u.user_id like concat('%', :word, '%') " +
+            "order by u.user_id")
     List<UserEntity> findByKeyword(@Param("word") String word);
 }
