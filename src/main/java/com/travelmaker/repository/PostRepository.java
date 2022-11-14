@@ -1,5 +1,6 @@
 package com.travelmaker.repository;
 
+import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -45,10 +46,13 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value = "update post set `like`=:like where id=:id", nativeQuery = true)
     Optional<Integer> updateLike(@Param("id") int idx, @Param("like") int like);
 
-    // 해시태그 검색
+    // 해시태그 목록
+    @Query(value = "select * from hashtags where tag_name like concat('%', :name, '%')", nativeQuery=true)
+    List<HashtagEntity> findHashtagsByKeyword(@Param("name") String name);
+
+    // 해시태그로 검색
     @Query(value = "select * from post where id = " +
-            "(select post_id from post_hashtag where tag_id in " +
-            "(select id from hashtags where tag_name like concat('%', :name, '%')))", nativeQuery = true)
-    List<PostEntity> findByKeyword(@Param("name") String name);
+            "(select post_id from post_hashtag where tag_id is :name)", nativeQuery = true)
+    List<PostEntity> findPostsByKeyword(@Param("name") String name);
 
 }
