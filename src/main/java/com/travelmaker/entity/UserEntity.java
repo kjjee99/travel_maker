@@ -32,6 +32,12 @@ public class UserEntity{
     @Column(name="role")
     private String role;
 
+    public UserEntity(int id, String user_id, String profile_img){
+        this.id = id;
+        this.user_id = user_id;
+        this.profile_img = profile_img;
+    }
+
     @Builder
     public UserEntity(int id, String email, String user_id, String password, String phone_number, String profile_img, String role) {
         this.id = id;
