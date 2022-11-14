@@ -34,6 +34,10 @@ public interface PostController {
     /* 좋아요 반영 */
     ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like);
 
-    /* 검색 */
-    ResponseEntity searchByKeyword(@CookieValue("userId") String userId, @RequestParam String word);
+    /* hashtag 목록 검색 */
+    ResponseEntity searchByKeyword(@PathVariable("keyword") String keyword);
+
+    /* hashtag 검색 */
+    ResponseEntity searchByHashtag(@RequestParam String word);
+
 }

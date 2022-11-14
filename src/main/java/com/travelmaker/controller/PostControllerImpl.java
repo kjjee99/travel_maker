@@ -1,6 +1,7 @@
 package com.travelmaker.controller;
 
 import com.travelmaker.dto.Post;
+import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
 import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
@@ -90,11 +91,20 @@ public class PostControllerImpl implements PostController{
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    /* 검색 */
+    /* 해시태그 목록 */
+    @Override
+    @GetMapping("/tag/{keyword}")
+    public ResponseEntity searchByKeyword(@PathVariable("keyword") String keyword){
+        List<HashtagEntity> list = postService.searchByKeyword(keyword);
+        return ResponseEntity.ok(list);
+    }
+
+
+    /* 해시태그로 검색 */
     @Override
     @GetMapping("/tag")
-    public ResponseEntity searchByKeyword(@CookieValue("userId") String userId, @RequestParam String word){
-        List<PostEntity> list =  postService.searchByKeyword(word);
+    public ResponseEntity searchByHashtag(@RequestParam String word){
+        List<PostEntity> list =  postService.searchByHashtag(word);
         return ResponseEntity.ok(list);
     }
 }
