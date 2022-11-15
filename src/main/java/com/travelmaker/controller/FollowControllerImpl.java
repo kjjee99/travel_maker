@@ -6,6 +6,8 @@ import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.FollowRepository;
 import com.travelmaker.repository.UserRepository;
+import com.travelmaker.service.FollowService;
+import com.travelmaker.service.FollowServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,31 +22,13 @@ import java.util.Optional;
 public class FollowControllerImpl implements FollowController{
 
     @Autowired
-    UserRepository userRepository;
-    @Autowired
-    FollowRepository followRepository;
+    FollowServiceImpl followService;
 
     /* 팔로잉 */
     @Override
     @GetMapping("")
     public ResponseEntity following(@CookieValue("userId") String userId, String followId){
-        // 팔로우하는 유저
-        Optional<Integer> follower = userRepository.findIdByUserId(userId);
-        int followerId = follower.get();
-
-        // 팔로잉하는 유저
-        Optional<Integer> following = userRepository.findIdByUserId(followId);
-        int followingId = following.get();
-
-        // 저장하기
-        FollowEntity entity = FollowEntity.builder()
-                .userId(followerId)
-                .following(followingId)
-                .build();
-        FollowEntity result = followRepository.save(entity);
-        // ERROR
-        if(result.getUserId() == 0) new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
-
+        followService.follow(userId, followId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
@@ -52,7 +36,7 @@ public class FollowControllerImpl implements FollowController{
     @Override
     @GetMapping("/following/{userId}")
     public ResponseEntity followingList(@PathVariable("userId") String userId){
-        List<UserEntity> followings = followRepository.followingList(userId);
+        List<UserEntity> followings = followService.followingList(userId);
         return ResponseEntity.ok(followings);
     }
 
@@ -60,8 +44,8 @@ public class FollowControllerImpl implements FollowController{
     @Override
     @GetMapping("/following/{userId}")
     public ResponseEntity followerList(@PathVariable("userId") String userId){
-        List<UserEntity> followings = followRepository.followerList(userId);
-        return ResponseEntity.ok(followings);
+        List<UserEntity> followers = followService.followerList(userId);
+        return ResponseEntity.ok(followers);
     }
 
 }
