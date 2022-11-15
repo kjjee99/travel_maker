@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/follow")
+@RequestMapping("/api/follow")
 public class FollowControllerImpl implements FollowController{
 
     @Autowired
