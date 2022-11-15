@@ -44,13 +44,19 @@ public class FollowServiceImpl implements FollowService{
 
     /* 팔로잉한 사람 목록 */
     public List<UserEntity> followingList(String userId){
-        List<UserEntity> followings = followRepository.followingList(userId);
+        Optional<Integer> id = userRepository.findIdByUserId(userId);
+        int findId = id.get();
+
+        List<UserEntity> followings = userRepository.followingList(findId);
         return followings;
     }
 
     /* 팔로우한 사람 목록 */
     public List<UserEntity> followerList(String userId){
-        List<UserEntity> followers = followRepository.followerList(userId);
+        Optional<Integer> id = userRepository.findIdByUserId(userId);
+        int findId = id.get();
+
+        List<UserEntity> followers = userRepository.followerList(findId);
         return followers;
     }
 }
