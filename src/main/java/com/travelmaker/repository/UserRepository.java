@@ -20,6 +20,10 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query(value = "SELECT * from user u where u.user_id = :id", nativeQuery = true)
     Optional<UserEntity> findByUserId(@Param("id") String id);
 
+    // 유저 인덱스(id) 검색
+    @Query(value = "SELECT id from user where user_id = :id")
+    Optional<Integer> findIdByUserId(@Param("id") String id);
+
     // 회원정보 수정
     @Transactional
     @Modifying
