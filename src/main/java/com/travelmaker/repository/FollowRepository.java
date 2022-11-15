@@ -12,11 +12,5 @@ import java.util.List;
 @Repository
 public interface FollowRepository extends JpaRepository<FollowEntity, String> {
 
-    @Query(value = "Select * from user where userId in " +
-            "(select following from follow where user_id = :id)", nativeQuery = true)
-    List<UserEntity> followingList(@Param("id") String id);
 
-    @Query(value = "Select * from user where userId in " +
-            "(select user_id from follow where following = :id)", nativeQuery = true)
-    List<UserEntity> followerList(@Param("id") String id);
 }

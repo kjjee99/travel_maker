@@ -21,7 +21,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     Optional<UserEntity> findByUserId(@Param("id") String id);
 
     // 유저 인덱스(id) 검색
-    @Query(value = "SELECT id from user where user_id = :id")
+    @Query(value = "SELECT u.id from UserEntity u where u.user_id = :id")
     Optional<Integer> findIdByUserId(@Param("id") String id);
 
     // 회원정보 수정
@@ -52,4 +52,12 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
             "where u.user_id like concat('%', :word, '%') " +
             "order by u.user_id")
     List<UserEntity> findByKeyword(@Param("word") String word);
+
+    @Query(value = "Select * from user where id in " +
+            "(select following from follow where user_id = :id)", nativeQuery = true)
+    List<UserEntity> followingList(@Param("id") int id);
+
+    @Query(value = "Select * from user where id in " +
+            "(select user_id from follow where following = :id)", nativeQuery = true)
+    List<UserEntity> followerList(@Param("id") int id);
 }
