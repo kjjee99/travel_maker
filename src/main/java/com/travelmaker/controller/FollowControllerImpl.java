@@ -26,8 +26,8 @@ public class FollowControllerImpl implements FollowController{
 
     /* 팔로잉 */
     @Override
-    @GetMapping("")
-    public ResponseEntity following(@CookieValue("userId") String userId, String followId){
+    @GetMapping("/{followId}")
+    public ResponseEntity following(@CookieValue("userId") String userId, @PathVariable("followId") String followId){
         followService.follow(userId, followId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class FollowControllerImpl implements FollowController{
 
     /* 팔로우한 사람 목록 */
     @Override
-    @GetMapping("/following/{userId}")
+    @GetMapping("/follower/{userId}")
     public ResponseEntity followerList(@PathVariable("userId") String userId){
         List<UserEntity> followers = followService.followerList(userId);
         return ResponseEntity.ok(followers);
