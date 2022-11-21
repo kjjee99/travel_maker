@@ -2,9 +2,9 @@ package com.travelmaker.controller;
 
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -27,7 +27,7 @@ public interface UserController {
     ResponseEntity logout(HttpServletResponse response);
 
     /* 유저 정보 조회 */
-    ResponseEntity searchUser(@CookieValue("userId") String userId, HttpServletRequest request);
+    ResponseEntity searchUser(@PathVariable("userId") String userId, HttpServletRequest request);
 
     /* 유저 정보 수정 */
     ResponseEntity modifyUser(@CookieValue("userId") String userId, HttpServletRequest request, @RequestBody User user);

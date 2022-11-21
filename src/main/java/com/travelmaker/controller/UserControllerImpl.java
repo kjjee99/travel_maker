@@ -88,8 +88,8 @@ public class UserControllerImpl implements UserController {
 
     /* 유저 정보 조회 */
     @Override
-    @GetMapping("/info")
-    public ResponseEntity<?> searchUser(@CookieValue("userId") String userId, HttpServletRequest request){
+    @GetMapping("/info/{userId}")
+    public ResponseEntity<?> searchUser(@PathVariable("userId") String userId, HttpServletRequest request){
         // 프론트에서 받는 타입(json)
         return ResponseEntity.ok(service.searchUser(userId));
     }
@@ -102,6 +102,7 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    // FIXME: @RequestBody
     /* 회원 탈퇴 */
     @Override
     @GetMapping("/sign-out")
