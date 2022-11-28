@@ -16,6 +16,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -102,12 +103,24 @@ public class UserControllerImpl implements UserController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    // FIXME: @RequestBody
+    /* 비밀번호 변경 */
+    @Override
+    @PostMapping("/user/pass")
+    public ResponseEntity modifyPass(@CookieValue("userId") String userId, @RequestBody Map<String, String> param){
+        String nowPassword = param.get("nowPassword");
+        String newPassword = param.get("newPassword");
+
+        User user = User.builder().id(userId).password(nowPassword).build();
+        service.modifyPass(user, newPassword);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     /* 회원 탈퇴 */
     @Override
     @GetMapping("/sign-out")
-    public ResponseEntity deleteUser(@CookieValue("userId") String userId, HttpServletRequest request, HttpServletResponse response, @RequestBody User user){
-        boolean result = service.deleteUser(userId, user.getPassword());
+    public ResponseEntity deleteUser(@CookieValue("userId") String userId, HttpServletResponse response, @RequestBody Map<String, String> param){
+        String password = param.get("password");
+        boolean result = service.deleteUser(userId, password);
 
         // 쿠키에서 삭제
         ResponseCookie cookie = ResponseCookie.from("userId", null)

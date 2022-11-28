@@ -8,11 +8,15 @@ import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -122,9 +126,25 @@ public class UserServiceImpl implements UserService{
     }
 
     /* 비밀번호 확인 */
+    @Override
     public boolean checkPassword(String password, String compare){
         if(!passwordEncoder.matches(password, compare))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
+        return true;
+    }
+
+    /* 비밀번호 변경 */
+    public boolean modifyPass(User user, String newPassword){
+        Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(user.getId()))
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+        UserEntity findUser = entity.get();
+
+        if(!passwordEncoder.matches(findUser.getPassword(), user.getPassword()))
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updatePass(user.getId(), newPassword))
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
+
         return true;
     }
 
