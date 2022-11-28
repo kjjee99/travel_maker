@@ -22,7 +22,7 @@ public class UserEntity{
     @Column(name="email")
     private String email;
     @Column(name="userid")
-    private String user_id;
+    private String userId;
     @Column(name="password")
     private String password;
     @Column(name = "phonenumber")
@@ -32,16 +32,16 @@ public class UserEntity{
     @Column(name="role")
     private String role;
 
-    public UserEntity(int idx, String user_id, String profileImg){
+    public UserEntity(int idx, String userId, String profileImg){
         this.idx = idx;
-        this.user_id = user_id;
+        this.userId = userId;
         this.profileImg = profileImg;
     }
 
     @Builder
-    public UserEntity(int idx, String email, String user_id, String password, String phoneNumber, String profileImg, String role) {
+    public UserEntity(int idx, String email, String userId, String password, String phoneNumber, String profileImg, String role) {
         this.idx = idx;
-        this.user_id = user_id;
+        this.userId = userId;
         this.email = email;
         this.password = password;
         this.phoneNumber = phoneNumber;
