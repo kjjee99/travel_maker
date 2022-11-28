@@ -17,35 +17,35 @@ public class UserEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
-    private int id;
+    @Column(name="idx")
+    private int idx;
     @Column(name="email")
     private String email;
-    @Column(name="user_id")
+    @Column(name="userid")
     private String user_id;
     @Column(name="password")
     private String password;
-    @Column(name = "phone_number")
-    private String phone_number;
-    @Column(name="profile_img")
-    private String profile_img;
+    @Column(name = "phonenumber")
+    private String phoneNumber;
+    @Column(name="profileimg")
+    private String profileImg;
     @Column(name="role")
     private String role;
 
-    public UserEntity(int id, String user_id, String profile_img){
-        this.id = id;
+    public UserEntity(int idx, String user_id, String profileImg){
+        this.idx = idx;
         this.user_id = user_id;
-        this.profile_img = profile_img;
+        this.profileImg = profileImg;
     }
 
     @Builder
-    public UserEntity(int id, String email, String user_id, String password, String phone_number, String profile_img, String role) {
-        this.id = id;
+    public UserEntity(int idx, String email, String user_id, String password, String phoneNumber, String profileImg, String role) {
+        this.idx = idx;
         this.user_id = user_id;
         this.email = email;
         this.password = password;
-        this.phone_number = phone_number;
-        this.profile_img = profile_img;
+        this.phoneNumber = phoneNumber;
+        this.profileImg = profileImg;
         this.role = role;
     }
 

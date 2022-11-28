@@ -24,11 +24,11 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "idx")
+    private int idx;
 
-    @Column(name = "user_id")
-    private String user_id;
+    @Column(name = "userid")
+    private String userId;
 
     @Column(name = "title")
     private String title;
@@ -43,8 +43,8 @@ public class PostEntity {
     @Type(type="json")
     private Figures figures;
 
-    @Column(name = "post_img")
-    private String post_img;
+    @Column(name = "postimg")
+    private String postImg;
 
     @Column(name = "roads")
     @Type(type="json")
@@ -54,14 +54,14 @@ public class PostEntity {
     private Date created_at;
 
     @Builder
-    public PostEntity(int id, String user_id, String title, String content, int like, Figures figures, String post_img, List<Roads> roads, Date createdAt) {
-        this.id = id;
-        this.user_id = user_id;
+    public PostEntity(int idx, String userId, String title, String content, int like, Figures figures, String postImg, List<Roads> roads, Date createdAt) {
+        this.idx = idx;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.like = like;
         this.figures = figures;
-        this.post_img = post_img;
+        this.postImg = postImg;
         this.roads = roads;
         this.created_at = createdAt;
     }

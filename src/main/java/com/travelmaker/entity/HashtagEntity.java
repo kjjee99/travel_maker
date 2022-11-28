@@ -13,15 +13,15 @@ import javax.persistence.*;
 public class HashtagEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+    @Column(name = "idx")
+    private int idx;
 
     @Column(name="tag_name")
     private String tag_name;
 
     @Builder
-    public HashtagEntity(int id, String tag_name) {
-        this.id = id;
+    public HashtagEntity(int idx, String tag_name) {
+        this.idx = idx;
         this.tag_name = tag_name;
     }
 }
