@@ -10,17 +10,17 @@ public class User {
     private String id;
     private String email;
     private String password;
-    private String phone_number;
-    private String profile_img;
+    private String phoneNumber;
+    private String profileImg;
     private String role;
 
     @Builder
-    public User(String id, String email, String password, String phone_number, String profile_img, String role) {
+    public User(String id, String email, String password, String phoneNumber, String profileImg, String role) {
         this.id = id;
         this.email = email;
         this.password = password;
-        this.phone_number = phone_number;
-        this.profile_img = profile_img;
+        this.phoneNumber = phoneNumber;
+        this.profileImg = profileImg;
         this.role = role;
     }
 }
