@@ -15,10 +15,10 @@ import java.io.Serializable;
 @IdClass(PostnHashtag.class)
 public class PostnHashtagEntity implements Serializable {
     @Id
-    @Column(name = "post_id")
+    @Column(name = "postid")
     private int postId;
     @Id
-    @Column(name = "tag_id")
+    @Column(name = "tagid")
     private int tagId;
 
     @Builder
