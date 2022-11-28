@@ -17,21 +17,26 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Post {
-    // TODO: 주석달기🌟
     /** POST INDEX */
-    private int id;
+    private int idx;
+
     /** 사용자 ID */
-    private String user_id;
+    private String userId;
+
     /** 글 제목 */
     private String title;
+
     /** 글 내용 */
     private String content;
+
     /** 좋아요 개수 */
     private int like;
+
     /** 추천도 */
     private Figures figures;
+
     /** 글 사진(array)  */
-    private String post_img;
+    private String postImg;
 
     /** 추천 경로 */
     private List<Roads> recommendRoutes;
@@ -40,26 +45,14 @@ public class Post {
     private String[] hashtags;
 
     @Builder
-    public Post(int id, String user_id, String title, String content, int like, Figures figures, String post_img, List<Roads> roads) {
-        this.id = id;
-        this.user_id = user_id;
+    public Post(int idx, String userId, String title, String content, int like, Figures figures, String postImg, List<Roads> roads, String[] hashtags) {
+        this.idx = idx;
+        this.userId = userId;
         this.title = title;
         this.content = content;
         this.like = like;
         this.figures = figures;
-        this.post_img = post_img;
-        this.recommendRoutes = roads;
-    }
-
-    @Builder
-    public Post(int id, String user_id, String title, String content, int like, Figures figures, String post_img, List<Roads> roads, String[] hashtags) {
-        this.id = id;
-        this.user_id = user_id;
-        this.title = title;
-        this.content = content;
-        this.like = like;
-        this.figures = figures;
-        this.post_img = post_img;
+        this.postImg = postImg;
         this.recommendRoutes = roads;
         this.hashtags = hashtags;
     }
