@@ -21,7 +21,7 @@ public class UserInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         Cookie[] cookies = request.getCookies();
-        if(cookies == null)  throw new CustomException(ErrorCode.NULL_VALUE);
+        if(cookies == null)  throw new CustomException(ErrorCode.LOGIN_REQUIRED);
 
         for(Cookie cookie : cookies){
             if(cookie.getName().equals("userId")) return true;
