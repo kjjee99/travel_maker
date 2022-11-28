@@ -32,15 +32,15 @@ public class UserServiceImpl implements UserService{
 
         UserEntity entity = UserEntity.builder()
                 .email(user.getEmail())
-                .user_id(user.getId())
+                .userId(user.getId())
                 .password(encodedPassword)
-                .phone_number(user.getPhone_number())
+                .phoneNumber(user.getPhoneNumber())
                 .build();
 
         // DB 저장
         UserEntity savedUser = repository.save(entity);
 
-        if(savedUser.getUser_id().isEmpty())    throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        if(savedUser.getUserId().isEmpty())    throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         return true;
     }
 
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
     public boolean checkId(String id){
         Optional<UserEntity> entity = repository.findByUserId(id);
         // 아이디가 존재하는 경우 에러 발생
-        if(!entity.get().getUser_id().isEmpty()) throw new CustomException(ErrorCode.ID_EXISTS);
+        if(!entity.get().getUserId().isEmpty()) throw new CustomException(ErrorCode.ID_EXISTS);
         return true;
     }
 
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService{
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
-        return findUser.getUser_id();
+        return findUser.getUserId();
     }
 
     /* 유저 정보 조회 */
@@ -84,16 +84,17 @@ public class UserServiceImpl implements UserService{
         UserEntity user = entity.get();
 
         User findUser = User.builder()
-                .id(user.getUser_id())
+                .id(user.getUserId())
                 .email(user.getEmail())
-                .phone_number(user.getPhone_number())
-                .profile_img(user.getProfile_img())
+                .phoneNumber(user.getPhoneNumber())
+                .profileImg(user.getProfileImg())
                 .build();
 
         return findUser;
     }
 
     /* 유저 정보 수정 */
+    // TODO: 기본 이미지, 변경된 패스워드 받기
     @Override
     public boolean modifyUser(User user){
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(user.getId())
@@ -103,19 +104,20 @@ public class UserServiceImpl implements UserService{
         UserEntity findUser = entity.get();
 
         String password = passwordEncoder.encode(user.getPassword());
-        // 비밀번호 맞는지 확인하기
+        // FIXME: 비밀번호 맞는지 확인하기
         checkPassword(password, findUser.getPassword());
 
         // params
-        String userId = user.getId().isEmpty() ? findUser.getUser_id() : user.getId();   // 수정 안됨
+        String userId = user.getId().isEmpty() ? findUser.getUserId() : user.getId();   // 수정 안됨
         String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
-        String phone_number = user.getPhone_number().isEmpty() ? findUser.getPhone_number() : user.getPhone_number();
-        String profile_img = user.getProfile_img().isEmpty() ? findUser.getProfile_img() : user.getProfile_img();
+        String phone_number = user.getPhoneNumber().isEmpty() ? findUser.getPhoneNumber() : user.getPhoneNumber();
+        String profile_img = user.getProfileImg().isEmpty() ? findUser.getProfileImg() : user.getProfileImg();
 
         Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(userId, email, password, phone_number, profile_img)
                 // 수정되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
+        // TODO: 회원 정보 객체 전달
         return true;
     }
 
@@ -133,7 +135,7 @@ public class UserServiceImpl implements UserService{
 
         UserEntity findUser = entity.get();
 
-        Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUser_id())
+        Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUserId())
                 // 삭제되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
         return true;
