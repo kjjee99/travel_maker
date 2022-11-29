@@ -21,6 +21,7 @@ public class FollowServiceImpl implements FollowService{
     @Autowired
     FollowRepository followRepository;
 
+    // FIXME: throw Exception
     public boolean follow(String userId, String followId){
         // 팔로우하는 유저
         Optional<Integer> follower = userRepository.findIdByUserId(userId);
@@ -32,12 +33,12 @@ public class FollowServiceImpl implements FollowService{
 
         // 저장하기
         FollowEntity entity = FollowEntity.builder()
-                .userId(followerId)
+                .userIdx(followerId)
                 .following(followingId)
                 .build();
         FollowEntity result = followRepository.save(entity);
         // ERROR
-        if(result.getUserId() == 0) new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
+        if(result.getUserIdx() == 0) new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
         return true;
     }
