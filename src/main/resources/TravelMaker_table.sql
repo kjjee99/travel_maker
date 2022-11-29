@@ -11,9 +11,9 @@ CREATE TABLE `user` (
   `role` varchar(45) DEFAULT 'basic',
   PRIMARY KEY (`idx`),
   UNIQUE KEY `id_UNIQUE` (`idx`),
-  UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `user_id_UNIQUE` (`userid`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
 -- 게시글
 CREATE TABLE `post` (
