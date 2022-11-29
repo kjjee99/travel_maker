@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class PostServiceImpl implements PostService {
     public boolean writePost(Post post){
 
         PostEntity entity = PostEntity.builder()
-                .user_id(post.getUser_id())
+                .userId(post.getUserId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(0)
@@ -46,7 +47,7 @@ public class PostServiceImpl implements PostService {
                 // TODO: 여러 개의 이미지 저장
                 // TODO: 순서대로 저장
                 // TODO: AWS S3에 저장하기
-                .post_img(post.getPost_img())
+                .postImg(post.getPostImg())
                 .roads(post.getRecommendRoutes())
                 .createdAt(new Date())
                 .build();
@@ -54,7 +55,7 @@ public class PostServiceImpl implements PostService {
         PostEntity savedPost = repository.save(entity);
 
         // SAVE HASHTAGS
-        saveHashtag(savedPost.getId(), post.getHashtags());
+        saveHashtag(savedPost.getIdx(), post.getHashtags());
 
         if(savedPost.getTitle().isEmpty())   throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
         return true;
@@ -69,11 +70,11 @@ public class PostServiceImpl implements PostService {
             if(!entity.isPresent()){
                 // SAVE IN Hashtag table
                 HashtagEntity tagEntity = HashtagEntity.builder()
-                        .tag_name(tag)
+                        .tagname(tag)
                         .build();
                 HashtagEntity savedTag = tagRepository.save(tagEntity);
                 // ERROR: 저장이 안되었을 경우
-                if(savedTag.getTag_name().isEmpty())
+                if(savedTag.getTagname().isEmpty())
                     throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
                 findTag = savedTag;
             }
@@ -81,7 +82,7 @@ public class PostServiceImpl implements PostService {
             // SAVE IN Matching table
             PostnHashtagEntity relation = PostnHashtagEntity.builder()
                     .postId(postId)
-                    .tagId(findTag.getId())
+                    .tagId(findTag.getIdx())
                     .build();
             relationRepository.save(relation);
         }
@@ -90,7 +91,7 @@ public class PostServiceImpl implements PostService {
     /* 글 전체 목록 조회 */
     @Override
     // TODO: 팔로우한 유저만 게시글 뜨기
-    public List<PostEntity> postList(){
+    public List<Post> postList(){
         List<PostEntity> list = repository.findAll();
         // 저장된 게시글이 없는 경우
         if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
@@ -102,7 +103,22 @@ public class PostServiceImpl implements PostService {
                 i--;
             }
         }
-        return list;
+
+        List<Post> posts = new ArrayList<>();
+        for(PostEntity entity : list){
+            String[] tag = tagRepository.findTagsByPost(entity.getIdx());
+            Post post = Post.builder().idx(entity.getIdx())
+                    .userId(entity.getUserId())
+                    .postImg(entity.getPostImg())
+                    .title(entity.getTitle())
+                    .content(entity.getContent())
+                    .like(entity.getLike())
+                    .figures(entity.getFigures())
+                    .roads(entity.getRoads())
+                    .hashtags(tag).build();
+            posts.add(post);
+        }
+        return posts;
     }
 
     /* 유저가 작성한 글 목록 조회 */
@@ -130,13 +146,13 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
         PostEntity post = entity.get();
-        Post findPost = Post.builder().id(post.getId())
-                .user_id(post.getUser_id())
+        Post findPost = Post.builder().idx(post.getIdx())
+                .userId(post.getUserId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(post.getLike())
                 .figures(post.getFigures())
-                .post_img(post.getPost_img())
+                .postImg(post.getPostImg())
                 .roads(post.getRoads())
                 .build();
 
@@ -146,22 +162,22 @@ public class PostServiceImpl implements PostService {
     /* 글 수정 */
     @Override
     public Post modifyPost(Post post) {
-        Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(post.getId())
+        Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(post.getIdx())
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getId(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPost_img())
+        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPostImg())
                 // 수정 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
         Post updatedPost = Post.builder()
-                .id(post.getId())
+                .idx(post.getIdx())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .like(post.getLike())
                 .figures(post.getFigures())
                 // 주소로 변환된 값 반환
-                .post_img(updatedEntity.get().getPost_img())
+                .postImg(updatedEntity.get().getPostImg())
                 .roads(post.getRecommendRoutes())
                 .build();
 

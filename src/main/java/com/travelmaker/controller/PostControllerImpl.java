@@ -29,7 +29,7 @@ public class PostControllerImpl implements PostController{
     @Override
     @PostMapping("/write")
     public ResponseEntity writePost(@CookieValue("userId") String userId, @RequestBody Post post) {
-        post.setUser_id(userId);
+        post.setUserId(userId);
         // TODO : 경로 저장
         boolean savedResult = postService.writePost(post);
 
@@ -41,9 +41,9 @@ public class PostControllerImpl implements PostController{
     @GetMapping("/list")
     public ResponseEntity<?> postList(@CookieValue("userId") String userId){
         // TODO: Pagination -> 마지막에 보낼 데이터 정하기(더 이상 찾을 수 없을 때)
-        if(userId == null) throw new CustomException(ErrorCode.LOGIN_REQUIRED);
 
-        List<PostEntity> list = postService.postList();
+        // TODO: Hashtag array
+        List<Post> list = postService.postList();
 
         return ResponseEntity.ok(list);
     }
@@ -78,6 +78,7 @@ public class PostControllerImpl implements PostController{
     @Override
     @GetMapping("/{id}")
     public ResponseEntity deletePost(@CookieValue("userId") String userId, @PathVariable("id") int id){
+        // TODO: 글 삭제하는 사람과 일치하는지 확인
         boolean deletedResult = postService.deletePost(id);
         return ResponseEntity.ok(HttpStatus.OK);
     }

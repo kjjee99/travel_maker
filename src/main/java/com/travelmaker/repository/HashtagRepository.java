@@ -16,7 +16,7 @@ public interface HashtagRepository extends JpaRepository<HashtagEntity, String> 
             nativeQuery = true)
     Optional<HashtagEntity> findByName(@Param("name")String name);
 
-    @Query(value = "select tagname from hashtags h where idx = " +
-            "(select tagid from post p where postid = :idx)", nativeQuery = true)
-    List<String> findTagsByPost(@Param("idx") int idx);
+    @Query(value = "select tagname from hashtags h where idx in " +
+            "(select tagid from post_hashtag where postid = :idx)", nativeQuery = true)
+    String[] findTagsByPost(@Param("idx") int idx);
 }
