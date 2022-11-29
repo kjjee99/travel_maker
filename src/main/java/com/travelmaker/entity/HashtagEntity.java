@@ -16,12 +16,12 @@ public class HashtagEntity {
     @Column(name = "idx")
     private int idx;
 
-    @Column(name="tag_name")
-    private String tag_name;
+    @Column(name="tagname")
+    private String tagname;
 
     @Builder
-    public HashtagEntity(int idx, String tag_name) {
+    public HashtagEntity(int idx, String tagname) {
         this.idx = idx;
-        this.tag_name = tag_name;
+        this.tagname = tagname;
     }
 }
