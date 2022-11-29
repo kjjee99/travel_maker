@@ -25,6 +25,9 @@ public interface UserService {
     /* 비밀번호 확인 */
     boolean checkPassword(String password, String compare);
 
+    /* 비밀번호 수정 */
+    boolean modifyPass(User user, String newPassword);
+
     /* 회원 탈퇴 */
     boolean deleteUser(String userId, String password);
 

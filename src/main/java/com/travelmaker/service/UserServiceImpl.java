@@ -134,6 +134,7 @@ public class UserServiceImpl implements UserService{
     }
 
     /* 비밀번호 변경 */
+    @Override
     public boolean modifyPass(User user, String newPassword){
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(user.getId()))
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
