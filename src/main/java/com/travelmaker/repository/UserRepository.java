@@ -21,8 +21,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query(value = "SELECT * from user u where u.userid = :id", nativeQuery = true)
     Optional<UserEntity> findByUserId(@Param("id") String id);
 
-    // 유저 인덱스(id) 검색
-    @Query(value = "SELECT u.id from UserEntity u where u.userid = :id")
+    // 유저 인덱스(idx) 검색
+    @Query(value = "SELECT u.idx from UserEntity u where u.userId = :id")
     Optional<Integer> findIdByUserId(@Param("id") String id);
 
     // 회원정보 수정
@@ -34,7 +34,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
             "where userid = :userId", nativeQuery = true)
     Optional<Integer> updateUser(@Param("userId") String userId,
                           @Param("email") String email,
-                          @Param("password") String password,
                           @Param("phonenumber") String phone_number,
                           @Param("profileImg") String profileImg);
 
@@ -54,9 +53,9 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     // 회원 검색
     // TODO: limit 10
-    @Query(value = "select new com.travelmaker.entity.UserEntity(u.idx, u.userid, u.profileimg) from UserEntity u " +
-            "where u.userid like concat('%', :word, '%') " +
-            "order by u.userid")
+    @Query(value = "select new com.travelmaker.entity.UserEntity(u.idx, u.userId, u.profileImg) from UserEntity u " +
+            "where u.userId like concat('%', :word, '%') " +
+            "order by u.userId")
     List<UserEntity> findByKeyword(@Param("word") String word);
 
     // TODO: password 빼고
@@ -67,6 +66,6 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     // 팔로워 목록
     @Query(value = "Select * from user where idx in " +
-            "(select userid from follow where following = :id)", nativeQuery = true)
+            "(select useridx from follow where following = :id)", nativeQuery = true)
     List<UserEntity> followerList(@Param("id") int id);
 }

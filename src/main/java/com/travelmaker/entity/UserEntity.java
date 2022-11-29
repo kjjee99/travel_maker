@@ -32,10 +32,10 @@ public class UserEntity{
     @Column(name="role")
     private String role;
 
-    public UserEntity(int idx, String userId, String profileImg){
+    public UserEntity(int idx, String userid, String profileimg){
         this.idx = idx;
-        this.userId = userId;
-        this.profileImg = profileImg;
+        this.userId = userid;
+        this.profileImg = profileimg;
     }
 
     @Builder

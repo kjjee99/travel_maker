@@ -9,13 +9,13 @@ import lombok.NoArgsConstructor;
 public class Follow {
 
     private int id;
-    private int userId;
+    private int userIdx;
     private int following;
 
     @Builder
-    public Follow(int id, int userId, int following) {
+    public Follow(int id, int userIdx, int following) {
         this.id = id;
-        this.userId = userId;
+        this.userIdx = userIdx;
         this.following = following;
     }
 }

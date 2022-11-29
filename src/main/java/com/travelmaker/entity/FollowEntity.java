@@ -16,15 +16,15 @@ public class FollowEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private int idx;
-    @Column(name = "userid")
-    private int userId;
+    @Column(name = "useridx")
+    private int userIdx;
     @Column(name = "following")
     private int following;
 
     @Builder
-    public FollowEntity(int idx, int userId, int following) {
+    public FollowEntity(int idx, int userIdx, int following) {
         this.idx = idx;
-        this.userId = userId;
+        this.userIdx = userIdx;
         this.following = following;
     }
 }
