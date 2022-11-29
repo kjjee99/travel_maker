@@ -54,19 +54,19 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
 
     // 회원 검색
     // TODO: limit 10
-    @Query(value = "select new com.travelmaker.entity.UserEntity(u.id, u.user_id, u.profileimg) from UserEntity u " +
+    @Query(value = "select new com.travelmaker.entity.UserEntity(u.idx, u.userid, u.profileimg) from UserEntity u " +
             "where u.userid like concat('%', :word, '%') " +
             "order by u.userid")
     List<UserEntity> findByKeyword(@Param("word") String word);
 
     // TODO: password 빼고
     // 팔로잉 목록
-    @Query(value = "Select * from user where id in " +
+    @Query(value = "Select * from user where idx in " +
             "(select following from follow where userid = :id)", nativeQuery = true)
     List<UserEntity> followingList(@Param("id") int id);
 
     // 팔로워 목록
-    @Query(value = "Select * from user where id in " +
+    @Query(value = "Select * from user where idx in " +
             "(select userid from follow where following = :id)", nativeQuery = true)
     List<UserEntity> followerList(@Param("id") int id);
 }

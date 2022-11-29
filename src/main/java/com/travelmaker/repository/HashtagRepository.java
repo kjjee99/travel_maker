@@ -6,12 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface HashtagRepository extends JpaRepository<HashtagEntity, String> {
 
-    @Query(value = "select * from hashtags h where h.tag_name = :name",
+    @Query(value = "select * from hashtags h where h.tagname = :name",
             nativeQuery = true)
     Optional<HashtagEntity> findByName(@Param("name")String name);
+
+    @Query(value = "select tagname from hashtags h where idx = " +
+            "(select tagid from post p where postid = :idx)", nativeQuery = true)
+    List<String> findTagsByPost(@Param("idx") int idx);
 }
