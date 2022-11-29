@@ -99,6 +99,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @PostMapping("/user")
     public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId, HttpServletRequest request,@RequestBody User user) {
+        user.setId(userId);
         service.modifyUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
     }

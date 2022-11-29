@@ -112,12 +112,11 @@ public class UserServiceImpl implements UserService{
         checkPassword(password, findUser.getPassword());
 
         // params
-        String userId = user.getId().isEmpty() ? findUser.getUserId() : user.getId();   // 수정 안됨
         String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
         String phone_number = user.getPhoneNumber().isEmpty() ? findUser.getPhoneNumber() : user.getPhoneNumber();
         String profile_img = user.getProfileImg().isEmpty() ? findUser.getProfileImg() : user.getProfileImg();
 
-        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(userId, email, phone_number, profile_img)
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(user.getId(), email, phone_number, profile_img)
                 // 수정되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
