@@ -53,7 +53,8 @@ public class UserServiceImpl implements UserService{
     public boolean checkId(String id){
         Optional<UserEntity> entity = repository.findByUserId(id);
         // 아이디가 존재하는 경우 에러 발생
-        if(!entity.get().getUserId().isEmpty()) throw new CustomException(ErrorCode.ID_EXISTS);
+        if(entity.isPresent() && !entity.get().getUserId().isEmpty())
+            throw new CustomException(ErrorCode.ID_EXISTS);
         return true;
     }
 
