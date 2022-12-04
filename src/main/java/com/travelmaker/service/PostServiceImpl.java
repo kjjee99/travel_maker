@@ -49,6 +49,7 @@ public class PostServiceImpl implements PostService {
         for(int i = 0; i < images.size(); i++) {
             FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
             String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
+            // 쉼표(,)로 split
             imageUrl += storedImg + ",";
         }
 
@@ -120,7 +121,7 @@ public class PostServiceImpl implements PostService {
             String[] tag = tagRepository.findTagsByPost(entity.getIdx());
             Post post = Post.builder().idx(entity.getIdx())
                     .userId(entity.getUserId())
-//                    .postImg(entity.getPostImg())
+                    .postImg(entity.getPostImg())
                     .title(entity.getTitle())
                     .content(entity.getContent())
                     .like(entity.getLike())
@@ -163,7 +164,7 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .like(post.getLike())
                 .figures(post.getFigures())
-//                .postImg(post.getPostImg())
+                .postImg(post.getPostImg())
                 .roads(post.getRoads())
                 .build();
 
