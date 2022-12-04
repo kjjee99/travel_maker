@@ -50,8 +50,8 @@ public class PostEntity {
     @Type(type="json")
     private List<Roads> roads;
 
-    @Column(name = "created_at")
-    private Date created_at;
+    @Column(name = "createdat")
+    private Date createdat;
 
     @Builder
     public PostEntity(int idx, String userId, String title, String content, int like, Figures figures, String postImg, List<Roads> roads, Date createdAt) {
@@ -63,6 +63,6 @@ public class PostEntity {
         this.figures = figures;
         this.postImg = postImg;
         this.roads = roads;
-        this.created_at = createdAt;
+        this.createdat = createdAt;
     }
 }
