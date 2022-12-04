@@ -3,12 +3,14 @@ package com.travelmaker.service;
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 public interface PostService {
 
     /*글 작성*/
-    boolean writePost(Post post);
+    boolean writePost(Post post, List<MultipartFile> images);
 
     /* 해시태그 저장 */
     void saveHashtag(int postId, String[] hashtags);

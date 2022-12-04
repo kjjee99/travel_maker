@@ -1,5 +1,7 @@
 package com.travelmaker.service;
 
+import com.travelmaker.config.AmazonS3ResourceStorage;
+import com.travelmaker.dto.FileDetail;
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
 import java.util.ArrayList;
@@ -34,9 +37,20 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private PostnTagRepository relationRepository;
 
+    @Autowired
+    private AmazonS3ResourceStorage amazonS3ResourceStorage;
+
     /* 글 작성 */
     @Override
-    public boolean writePost(Post post){
+    public boolean writePost(Post post, List<MultipartFile> images){
+
+        String imageUrl = "";
+
+        for(int i = 0; i < images.size(); i++) {
+            FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
+            String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
+            imageUrl += storedImg + ",";
+        }
 
         PostEntity entity = PostEntity.builder()
                 .userId(post.getUserId())
@@ -44,10 +58,7 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .like(0)
                 .figures(post.getFigures())     // 추천도
-                // TODO: 여러 개의 이미지 저장
-                // TODO: 순서대로 저장
-                // TODO: AWS S3에 저장하기
-                .postImg(post.getPostImg())
+                .postImg(imageUrl)
                 .roads(post.getRecommendRoutes())
                 .createdAt(new Date())
                 .build();
@@ -109,7 +120,7 @@ public class PostServiceImpl implements PostService {
             String[] tag = tagRepository.findTagsByPost(entity.getIdx());
             Post post = Post.builder().idx(entity.getIdx())
                     .userId(entity.getUserId())
-                    .postImg(entity.getPostImg())
+//                    .postImg(entity.getPostImg())
                     .title(entity.getTitle())
                     .content(entity.getContent())
                     .like(entity.getLike())
@@ -152,7 +163,7 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .like(post.getLike())
                 .figures(post.getFigures())
-                .postImg(post.getPostImg())
+//                .postImg(post.getPostImg())
                 .roads(post.getRoads())
                 .build();
 
@@ -166,7 +177,7 @@ public class PostServiceImpl implements PostService {
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPostImg())
+        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), "img")
                 // 수정 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
@@ -177,7 +188,7 @@ public class PostServiceImpl implements PostService {
                 .like(post.getLike())
                 .figures(post.getFigures())
                 // 주소로 변환된 값 반환
-                .postImg(updatedEntity.get().getPostImg())
+//                .postImg(updatedEntity.get().getPostImg())
                 .roads(post.getRecommendRoutes())
                 .build();
 
