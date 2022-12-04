@@ -21,13 +21,12 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/api")
-public class UserControllerImpl implements UserController {
+public class UserControllerImpl{
 
     @Autowired
     UserServiceImpl service;
 
     /* 회원가입 */
-    @Override
     @PostMapping("/register")
     public ResponseEntity addUser(@RequestBody User user, HttpServletResponse response){
         boolean result = service.addUser(user);
@@ -49,7 +48,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 중복 아이디 확인 */
-    @Override
     @GetMapping("/check")
     public ResponseEntity checkId(@RequestParam String id){
         service.checkId(id);
@@ -57,7 +55,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 로그인 */
-    @Override
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody User user, HttpServletResponse response){
         String id = service.login(user);
@@ -74,7 +71,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 로그아웃 */
-    @Override
     @GetMapping("/logout")
     public ResponseEntity logout(HttpServletResponse response){
         // 쿠키에서 삭제
@@ -88,7 +84,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 유저 정보 조회 */
-    @Override
     @GetMapping("/info/{userId}")
     public ResponseEntity<?> searchUser(@PathVariable("userId") String userId, HttpServletRequest request){
         // 프론트에서 받는 타입(json)
@@ -96,7 +91,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 유저 정보 수정 */
-    @Override
     @PostMapping("/user")
     public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId, HttpServletRequest request,@RequestBody User user) {
         user.setId(userId);
@@ -105,7 +99,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 비밀번호 변경 */
-    @Override
     @PostMapping("/user/pass")
     public ResponseEntity modifyPass(@CookieValue("userId") String userId, @RequestBody Map<String, String> param){
         String nowPassword = param.get("nowPassword");
@@ -117,7 +110,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 회원 탈퇴 */
-    @Override
     @PostMapping("/sign-out")
     public ResponseEntity deleteUser(@CookieValue("userId") String userId, HttpServletResponse response, @RequestBody Map<String, String> param){
         String password = param.get("password");
@@ -134,7 +126,6 @@ public class UserControllerImpl implements UserController {
     }
 
     /* 회원 검색 */
-    @Override
     @GetMapping("/user")
     public List<UserEntity> searchUser(@RequestParam String word){
         return service.searchUserByKeyword(word);

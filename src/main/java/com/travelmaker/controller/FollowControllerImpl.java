@@ -19,13 +19,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/follow")
-public class FollowControllerImpl implements FollowController{
+public class FollowControllerImpl{
 
     @Autowired
     FollowServiceImpl followService;
 
     /* 팔로잉 */
-    @Override
     @GetMapping("/{followId}")
     public ResponseEntity following(@CookieValue("userId") String userId, @PathVariable("followId") String followId){
         followService.follow(userId, followId);
@@ -33,7 +32,6 @@ public class FollowControllerImpl implements FollowController{
     }
 
     /* 팔로잉한 사람 목록 */
-    @Override
     @GetMapping("/following/{userId}")
     public ResponseEntity followingList(@PathVariable("userId") String userId){
         List<UserEntity> followings = followService.followingList(userId);
@@ -41,7 +39,6 @@ public class FollowControllerImpl implements FollowController{
     }
 
     /* 팔로우한 사람 목록 */
-    @Override
     @GetMapping("/follower/{userId}")
     public ResponseEntity followerList(@PathVariable("userId") String userId){
         List<UserEntity> followers = followService.followerList(userId);
