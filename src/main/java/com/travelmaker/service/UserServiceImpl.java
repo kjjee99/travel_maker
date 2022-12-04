@@ -155,6 +155,8 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         UserEntity findUser = entity.get();
+        if(!passwordEncoder.matches(findUser.getPassword(), password))
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
         Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUserId())
                 // 삭제되지 않은 경우

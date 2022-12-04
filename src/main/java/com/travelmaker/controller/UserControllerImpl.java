@@ -118,7 +118,7 @@ public class UserControllerImpl implements UserController {
 
     /* 회원 탈퇴 */
     @Override
-    @GetMapping("/sign-out")
+    @PostMapping("/sign-out")
     public ResponseEntity deleteUser(@CookieValue("userId") String userId, HttpServletResponse response, @RequestBody Map<String, String> param){
         String password = param.get("password");
         boolean result = service.deleteUser(userId, password);
