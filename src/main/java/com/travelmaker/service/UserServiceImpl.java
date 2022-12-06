@@ -140,7 +140,7 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
         UserEntity findUser = entity.get();
 
-        if(!passwordEncoder.matches(findUser.getPassword(), user.getPassword()))
+        if(!passwordEncoder.matches(user.getPassword(), findUser.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
         Optional<Integer> updatedUser = Optional.ofNullable(repository.updatePass(user.getId(), newPassword))
@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         UserEntity findUser = entity.get();
-        if(!passwordEncoder.matches(findUser.getPassword(), password))
+        if(!passwordEncoder.matches(password, findUser.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
         Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUserId())
