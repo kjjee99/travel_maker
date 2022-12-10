@@ -40,9 +40,29 @@ public class FollowServiceImpl implements FollowService{
                 .following(followingIdx)
                 .build();
         FollowEntity result = followRepository.save(entity);
+
         // ERROR
         if(result.getUserIdx() == 0) new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
 
+        return true;
+    }
+
+    /* 팔로우 취소 */
+    @Override
+    public boolean unfollow(String userId, String followId){
+        // 팔로우하는 유저
+        Optional<Integer> follower = Optional.ofNullable(userRepository.findIdByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
+        int followerIdx = follower.get();
+
+        // 팔로잉하는 유저
+        Optional<Integer> following = Optional.ofNullable(userRepository.findIdByUserId(followId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
+        int followingIdx = following.get();
+
+        // 언팔로우
+        followRepository.unfollow(followerIdx, followingIdx)
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
         return true;
     }
 
@@ -53,6 +73,7 @@ public class FollowServiceImpl implements FollowService{
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
         int findId = id.get();
 
+        // FIXME: Change DTO
         List<UserEntity> followings = userRepository.followingList(findId);
 
         if(followings.size() < 1)   throw new CustomException(ErrorCode.NULL_VALUE);
