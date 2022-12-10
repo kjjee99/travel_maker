@@ -76,7 +76,7 @@ public class UserControllerImpl{
         // 쿠키에서 삭제
         ResponseCookie cookie = ResponseCookie.from("userId", null)
                         .maxAge(0)
-                                .path("/").build();
+                        .path("/").build();
 
         response.addHeader("Set-Cookie", cookie.toString());
 
@@ -85,14 +85,14 @@ public class UserControllerImpl{
 
     /* 유저 정보 조회 */
     @GetMapping("/info/{userId}")
-    public ResponseEntity<?> searchUser(@PathVariable("userId") String userId, HttpServletRequest request){
+    public ResponseEntity<?> userInfo(@PathVariable("userId") String userId){
         // 프론트에서 받는 타입(json)
         return ResponseEntity.ok(service.searchUser(userId));
     }
 
     /* 유저 정보 수정 */
     @PostMapping("/user")
-    public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId, HttpServletRequest request,@RequestBody User user) {
+    public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId,@RequestBody User user) {
         user.setId(userId);
         service.modifyUser(user);
         return ResponseEntity.ok(HttpStatus.OK);
@@ -127,8 +127,8 @@ public class UserControllerImpl{
 
     /* 회원 검색 */
     @GetMapping("/user")
-    public List<UserEntity> searchUser(@RequestParam String word){
-        return service.searchUserByKeyword(word);
+    public ResponseEntity searchUser(@RequestParam String word){
+        return ResponseEntity.ok(service.searchUserByKeyword(word));
     }
     // 비밀번호 찾기 => 추가 기능
 }
