@@ -143,7 +143,8 @@ public class UserServiceImpl implements UserService{
         if(!passwordEncoder.matches(user.getPassword(), findUser.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
-        Optional<Integer> updatedUser = Optional.ofNullable(repository.updatePass(user.getId(), newPassword))
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updatePass(user.getId(), encodedPassword))
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         return true;
