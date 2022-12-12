@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -219,12 +216,14 @@ public class PostServiceImpl implements PostService {
 
     /* Hashtag 목록 검색 */
     @Override
-    public List<HashtagEntity> searchByKeyword(String keyword){
-        List<HashtagEntity> hashtags = repository.findHashtagsByKeyword(keyword);
-        if(hashtags.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+    public String[] searchByKeyword(String keyword){
+        Optional<String[]> hashtags = Optional.ofNullable(tagRepository.findHashtagsByKeyword(keyword)
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
+        String[] list = hashtags.get();
+        int size = list.length > 9 ? 10 : list.length;
         // 총 10개
-        return hashtags.subList(0, 9);
+        return Arrays.copyOfRange(hashtags.get(), 0, size);
     }
 
     /* Hashtag 검색 */

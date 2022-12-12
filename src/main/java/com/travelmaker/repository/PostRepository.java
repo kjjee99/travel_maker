@@ -47,13 +47,12 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value = "update post set `like`=:like where idx=:idx", nativeQuery = true)
     Optional<Integer> updateLike(@Param("idx") int idx, @Param("like") int like);
 
-    // 해시태그 목록
-    @Query(value = "select * from hashtags where tagname like concat('%', :name, '%')", nativeQuery=true)
-    List<HashtagEntity> findHashtagsByKeyword(@Param("name") String name);
+
 
     // 해시태그로 검색
     @Query(value = "select * from post where idx = " +
-            "(select postid from post_hashtag where tagid is :name)", nativeQuery = true)
+            "(select postid from post_hashtag where tagid is " +
+            "select idx from hashtags where tagname is :name)", nativeQuery = true)
     List<PostEntity> findPostsByKeyword(@Param("name") String name);
 
 }

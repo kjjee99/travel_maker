@@ -34,7 +34,7 @@ public interface PostService {
     int updateLike(int idx, int like);
 
     /* Hashtag 목록 검색 */
-    List<HashtagEntity> searchByKeyword(String keyword);
+    String[] searchByKeyword(String keyword);
 
     /* Hashtag 검색 */
     List<PostEntity> searchByHashtag(String word);

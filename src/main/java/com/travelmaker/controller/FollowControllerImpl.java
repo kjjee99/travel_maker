@@ -32,7 +32,7 @@ public class FollowControllerImpl{
     }
 
     /* 팔로우 취소 */
-    @GetMapping("/{followId}")
+    @GetMapping("/cancel/{followId}")
     public ResponseEntity unfollow(@CookieValue("userId") String userId, @PathVariable("followId") String followId){
         followService.unfollow(userId, followId);
         return ResponseEntity.ok(HttpStatus.OK);

@@ -91,7 +91,7 @@ public class PostControllerImpl{
     /* 해시태그 목록 */
     @GetMapping("/tag/{keyword}")
     public ResponseEntity searchByKeyword(@PathVariable("keyword") String keyword){
-        List<HashtagEntity> list = postService.searchByKeyword(keyword);
+        String[] list = postService.searchByKeyword(keyword);
         return ResponseEntity.ok(list);
     }
 

@@ -12,11 +12,16 @@ import java.util.Optional;
 @Repository
 public interface HashtagRepository extends JpaRepository<HashtagEntity, String> {
 
-    @Query(value = "select * from hashtags h where h.tagname = :name",
+    // 해시태그 검색
+    @Query(value = "select * from hashtags where tagname = :name",
             nativeQuery = true)
     Optional<HashtagEntity> findByName(@Param("name")String name);
 
     @Query(value = "select tagname from hashtags h where idx in " +
             "(select tagid from post_hashtag where postid = :idx)", nativeQuery = true)
     String[] findTagsByPost(@Param("idx") int idx);
+
+    // 해시태그 목록
+    @Query(value = "select tagname from hashtags where tagname like concat('%', :name, '%')", nativeQuery=true)
+    Optional<String[]> findHashtagsByKeyword(@Param("name") String name);
 }
