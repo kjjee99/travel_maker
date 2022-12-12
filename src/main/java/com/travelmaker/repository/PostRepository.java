@@ -50,9 +50,9 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
 
 
     // 해시태그로 검색
-    @Query(value = "select * from post where idx = " +
-            "(select postid from post_hashtag where tagid is " +
-            "select idx from hashtags where tagname is :name)", nativeQuery = true)
+    @Query(value = "select * from post where idx in " +
+            "(select postid from post_hashtag where tagid in (" +
+            "select idx from hashtags where tagname = concat('#', :name)))", nativeQuery = true)
     List<PostEntity> findPostsByKeyword(@Param("name") String name);
 
 }
