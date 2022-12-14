@@ -221,8 +221,11 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
         String[] list = hashtags.get();
+        // ERROR: 빈 배열일 때 에러 발생
+        if(list.length == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
+
         int size = list.length > 9 ? 10 : list.length;
-        // 총 10개
+        // 총 10개만 출력
         return Arrays.copyOfRange(hashtags.get(), 0, size);
     }
 
