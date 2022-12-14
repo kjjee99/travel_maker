@@ -203,6 +203,11 @@ public class PostServiceImpl implements PostService {
         Optional<Integer> deletedPost = Optional.ofNullable(repository.deletePost(idx)
                 // 삭제 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
+
+        // 게시글 삭제 시 해시태그 삭제
+        // TODO: 해시태그된 게시글이 모두 삭제되었을 경우 DB에서 삭제시킬지 아니면 검색되지 않게 할지
+        relationRepository.deleteByIdx(idx)
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
         return true;
     }
 
