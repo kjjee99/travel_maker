@@ -32,7 +32,6 @@ public class PostControllerImpl{
     public ResponseEntity writePost(@CookieValue("userId") String userId,
                                     @RequestPart("post") Post post,
                                     @RequestPart("images") List<MultipartFile> images) {
-//                                    @RequestBody Post post){
         post.setUserId(userId);
         boolean savedResult = postService.writePost(post, images);
 
