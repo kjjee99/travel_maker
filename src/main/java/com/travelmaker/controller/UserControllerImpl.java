@@ -1,5 +1,6 @@
 package com.travelmaker.controller;
 
+import com.travelmaker.dto.Post;
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
 import com.travelmaker.service.UserServiceImpl;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 
 import javax.servlet.http.Cookie;
@@ -92,9 +94,11 @@ public class UserControllerImpl{
 
     /* 유저 정보 수정 */
     @PostMapping("/user")
-    public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId,@RequestBody User user) {
+    public ResponseEntity<?> modifyUser(@CookieValue("userId") String userId,
+                                        @RequestPart("user") User user,
+                                        @RequestPart("profileImg") MultipartFile image) {
         user.setId(userId);
-        service.modifyUser(user);
+        service.modifyUser(user, image);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

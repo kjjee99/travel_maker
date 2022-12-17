@@ -1,5 +1,7 @@
 package com.travelmaker.service;
 
+import com.travelmaker.config.AmazonS3ResourceStorage;
+import com.travelmaker.dto.FileDetail;
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
 import com.travelmaker.error.CustomException;
@@ -13,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.swing.text.html.Option;
 import java.util.List;
@@ -27,6 +30,8 @@ public class UserServiceImpl implements UserService{
     private UserRepository repository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AmazonS3ResourceStorage amazonS3ResourceStorage;
 
     /* 회원가입 */
     @Override
@@ -99,23 +104,26 @@ public class UserServiceImpl implements UserService{
     }
 
     /* 유저 정보 수정 */
-    // TODO: 기본 이미지, 변경된 패스워드 받기
     @Override
-    public boolean modifyUser(User user){
+    public boolean modifyUser(User user, MultipartFile image){
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(user.getId())
                 // userId가 없는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         UserEntity findUser = entity.get();
 
-        String password = passwordEncoder.encode(user.getPassword());
-        // FIXME: 비밀번호 맞는지 확인하기
-        checkPassword(password, findUser.getPassword());
+        checkPassword(user.getPassword(), findUser.getPassword());
 
-        // params
+        // 이미지 저장하기
+        FileDetail fileDetail = FileDetail.multipartOf(image);
+        String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), image, fileDetail.getId());
+
+        log.info(storedImg);
+
+        // params ? not changed : changed
         String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
         String phone_number = user.getPhoneNumber().isEmpty() ? findUser.getPhoneNumber() : user.getPhoneNumber();
-        String profile_img = user.getProfileImg().isEmpty() ? findUser.getProfileImg() : user.getProfileImg();
+        String profile_img = image.isEmpty() ? findUser.getProfileImg() : storedImg;
 
         Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(user.getId(), email, phone_number, profile_img)
                 // 수정되지 않은 경우
@@ -125,10 +133,15 @@ public class UserServiceImpl implements UserService{
         return true;
     }
 
-    /* 비밀번호 확인 */
+    /**
+     *  비밀번호 확인
+     * @param compare : 비교할 비밀번호
+     * @param password : 원래 비밀번호
+     * @return boolean
+     *  */
     @Override
-    public boolean checkPassword(String password, String compare){
-        if(!passwordEncoder.matches(password, compare))
+    public boolean checkPassword(String compare, String password){
+        if(!passwordEncoder.matches(compare, password))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
         return true;
     }

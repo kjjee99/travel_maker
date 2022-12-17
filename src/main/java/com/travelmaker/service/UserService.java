@@ -2,6 +2,7 @@ package com.travelmaker.service;
 
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,7 +21,7 @@ public interface UserService {
     User searchUser(String userId);
 
     /* 유저 정보 수정 */
-    boolean modifyUser(User user);
+    boolean modifyUser(User user, MultipartFile image);
 
     /* 비밀번호 확인 */
     boolean checkPassword(String password, String compare);
