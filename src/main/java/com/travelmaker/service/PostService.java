@@ -25,7 +25,7 @@ public interface PostService {
     Post showPost(int idx);
 
     /* 글 수정 */
-    Post modifyPost(Post post);
+    Post modifyPost(Post post, List<MultipartFile> images);
 
     /* 글 삭제 */
     boolean deletePost(int idx);

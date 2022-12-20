@@ -170,10 +170,22 @@ public class PostServiceImpl implements PostService {
 
     /* 글 수정 */
     @Override
-    public Post modifyPost(Post post) {
+    public Post modifyPost(Post post, List<MultipartFile> images) {
         Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(post.getIdx())
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+
+        // TODO: 저장된 이미지 삭제하기
+        String imageUrl = "";
+
+        for(int i = 0; i < images.size(); i++) {
+            FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
+            String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
+            // 쉼표(,)로 split
+            imageUrl += storedImg + ",";
+        }
+
+        post.setPostImg(imageUrl);
 
         Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), "img")
                 // 수정 시 오류가 발생한 경우
@@ -185,8 +197,7 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .like(post.getLike())
                 .figures(post.getFigures())
-                // 주소로 변환된 값 반환
-//                .postImg(updatedEntity.get().getPostImg())
+                .postImg(updatedEntity.get().getPostImg())
                 .roads(post.getRecommendRoutes())
                 .build();
 

@@ -64,9 +64,12 @@ public class PostControllerImpl{
     }
 
     /* 글 수정 */
-    @PostMapping("/{id}")
-    public ResponseEntity<?> modifyPost(@PathVariable("id") int id, @CookieValue("userId") String userId, @RequestBody Post post){
-        Post updatedPost = postService.modifyPost(post);
+    @PostMapping("/{idx}")
+    public ResponseEntity<?> modifyPost(@PathVariable("idx") int idx, @CookieValue("userId") String userId,
+                                        @RequestPart("post") Post post,
+                                        @RequestPart("images") List<MultipartFile> images){
+        post.setIdx(idx);
+        Post updatedPost = postService.modifyPost(post, images);
 
         return ResponseEntity.ok(updatedPost);
     }
