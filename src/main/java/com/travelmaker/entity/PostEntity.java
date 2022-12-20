@@ -36,8 +36,8 @@ public class PostEntity {
     @Column(name = "content")
     private String content;
 
-    @Column(name = "`like`")
-    private int like;
+    @Column(name = "heart")
+    private int heart;
 
     @Column(name = "`figures`")
     @Type(type="json")
@@ -54,12 +54,12 @@ public class PostEntity {
     private Date createdat;
 
     @Builder
-    public PostEntity(int idx, String userId, String title, String content, int like, Figures figures, String postImg, List<Roads> roads, Date createdAt) {
+    public PostEntity(int idx, String userId, String title, String content, int heart, Figures figures, String postImg, List<Roads> roads, Date createdAt) {
         this.idx = idx;
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.like = like;
+        this.heart = heart;
         this.figures = figures;
         this.postImg = postImg;
         this.roads = roads;

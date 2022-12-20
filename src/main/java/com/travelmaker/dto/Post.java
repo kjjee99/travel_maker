@@ -30,7 +30,7 @@ public class Post {
     private String content;
 
     /** 좋아요 개수 */
-    private int like;
+    private int heart;
 
     /** 추천도 */
     private Figures figures;
@@ -45,12 +45,12 @@ public class Post {
     private String[] hashtags;
 
     @Builder
-    public Post(int idx, String userId, String title, String content, int like, Figures figures, String postImg, List<Roads> roads, String[] hashtags) {
+    public Post(int idx, String userId, String title, String content, int heart, Figures figures, String postImg, List<Roads> roads, String[] hashtags) {
         this.idx = idx;
         this.userId = userId;
         this.title = title;
         this.content = content;
-        this.like = like;
+        this.heart = heart;
         this.figures = figures;
         this.postImg = postImg;
         this.recommendRoutes = roads;
