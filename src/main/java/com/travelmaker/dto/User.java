@@ -12,5 +12,7 @@ public class User {
     private String password;
     private String phoneNumber;
     private String profileImg;
+    private int following;
+    private int follower;
     private String role;
 }

@@ -6,6 +6,7 @@ import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
 import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
+import com.travelmaker.repository.FollowRepository;
 import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,8 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private UserRepository repository;
+    @Autowired
+    private FollowRepository followRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -93,11 +96,20 @@ public class UserServiceImpl implements UserService{
 
         UserEntity user = entity.get();
 
+        // 팔로잉 숫자
+        Optional<Integer> following = Optional.ofNullable(followRepository.countFollowingByUser(user.getIdx())
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+        // 팔로워 숫자
+        Optional<Integer> follower = Optional.ofNullable(followRepository.countFollowerByUser(user.getIdx())
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+
         User findUser = User.builder()
                 .id(user.getUserId())
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .profileImg(user.getProfileImg())
+                .following(following.get())
+                .follower(follower.get())
                 .build();
 
         return findUser;
