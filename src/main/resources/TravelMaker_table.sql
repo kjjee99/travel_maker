@@ -6,8 +6,6 @@ CREATE TABLE `user` (
   `password` varchar(255) NOT NULL,
   `phonenumber` varchar(45) NOT NULL,
   `profileimg` varchar(255) DEFAULT NULL,
-  `following` int DEFAULT '0',
-  `follower` int DEFAULT '0',
   `role` varchar(45) DEFAULT 'basic',
   PRIMARY KEY (`idx`),
   UNIQUE KEY `id_UNIQUE` (`idx`),
@@ -24,7 +22,7 @@ CREATE TABLE `post` (
   `createdat` datetime DEFAULT NULL,
   `figures` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
   `like` int DEFAULT '0',
-  `postimg` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
+  `postimg` varchar(1023) CHARACTER SET utf8mb3 COLLATE utf8mb3_bin DEFAULT NULL,
   `roads` varchar(255) COLLATE utf8mb3_bin DEFAULT NULL,
   PRIMARY KEY (`idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
