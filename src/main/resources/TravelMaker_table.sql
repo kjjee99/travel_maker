@@ -56,6 +56,14 @@ CREATE TABLE `roads` (
   CONSTRAINT `fk_post_id` FOREIGN KEY (`postid`) REFERENCES `post` (`idx`) ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
 
+-- 좋아요
+CREATE TABLE `heart` (
+  `idx` int NOT NULL AUTO_INCREMENT,
+  `userid` varchar(15) COLLATE utf8mb3_bin NOT NULL,
+  `postidx` int NOT NULL,
+  PRIMARY KEY (`idx`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+
 -- 팔로잉
 CREATE TABLE `follow` (
   `idx` int NOT NULL AUTO_INCREMENT,
