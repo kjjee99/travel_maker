@@ -43,6 +43,8 @@ public class PostServiceImpl implements PostService {
 
         String imageUrl = "";
 
+        // TODO: MAX 10개
+        // TODO: 1MB 이상 용량 확인
         for(int i = 0; i < images.size(); i++) {
             FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
             String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
@@ -54,7 +56,7 @@ public class PostServiceImpl implements PostService {
                 .userId(post.getUserId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .like(0)
+                .heart(0)
                 .figures(post.getFigures())     // 추천도
                 .postImg(imageUrl)
                 .roads(post.getRecommendRoutes())
@@ -121,7 +123,7 @@ public class PostServiceImpl implements PostService {
                     .postImg(entity.getPostImg())
                     .title(entity.getTitle())
                     .content(entity.getContent())
-                    .like(entity.getLike())
+                    .heart(entity.getHeart())
                     .figures(entity.getFigures())
                     .roads(entity.getRoads())
                     .hashtags(tag).build();
@@ -159,7 +161,7 @@ public class PostServiceImpl implements PostService {
                 .userId(post.getUserId())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .like(post.getLike())
+                .heart(post.getHeart())
                 .figures(post.getFigures())
                 .postImg(post.getPostImg())
                 .roads(post.getRoads())
@@ -195,7 +197,7 @@ public class PostServiceImpl implements PostService {
                 .idx(post.getIdx())
                 .title(post.getTitle())
                 .content(post.getContent())
-                .like(post.getLike())
+                .heart(post.getHeart())
                 .figures(post.getFigures())
                 .postImg(updatedEntity.get().getPostImg())
                 .roads(post.getRecommendRoutes())
@@ -216,7 +218,7 @@ public class PostServiceImpl implements PostService {
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
         // 게시글 삭제 시 해시태그 삭제
-        // TODO: 해시태그된 게시글이 모두 삭제되었을 경우 DB에서 삭제시킬지 아니면 검색되지 않게 할지
+        // TODO: 해시태그된 게시글이 모두 삭제되었을 경우 DB에서 삭제
         relationRepository.deleteByIdx(idx)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
         return true;
@@ -224,10 +226,16 @@ public class PostServiceImpl implements PostService {
 
     /* 좋아요 반영 */
     @Override
-    public int updateLike(int idx, int like){
-        Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx, like)
+    public int updateLike(int idx, String userId){
+        Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)) );
         return entity.get();
+    }
+
+    /* 좋아요 취소 */
+    public int unLike(int idx, int userId){
+        //TODO: FILL,,,,
+        return 1;
     }
 
     /* Hashtag 목록 검색 */
@@ -248,6 +256,7 @@ public class PostServiceImpl implements PostService {
     /* Hashtag 검색 */
     @Override
     public List<PostEntity> searchByHashtag(String word){
+        // TODO: Pagination 6개?9개?
         List<PostEntity> postIds = repository.findPostsByKeyword(word);
         // ERROR: 검색한 값이 없을 때
         if(postIds.size() == 0 )    throw new CustomException(ErrorCode.NULL_VALUE);
