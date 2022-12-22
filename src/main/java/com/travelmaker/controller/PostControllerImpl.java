@@ -86,7 +86,7 @@ public class PostControllerImpl{
     @GetMapping("/like")
     public ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
         // TODO: 사용자가 좋아요한 게시글 저장
-        int updatedLike = postService.updateLike(idx, like);
+        int updatedLike = postService.updateLike(idx, userId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
