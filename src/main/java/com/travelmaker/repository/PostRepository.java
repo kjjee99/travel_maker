@@ -44,10 +44,8 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     // 좋아요 반영
     @Transactional
     @Modifying
-    @Query(value = "update post set heart=:heart where idx=:idx", nativeQuery = true)
-    Optional<Integer> updateLike(@Param("idx") int idx, @Param("heart") int heart);
-
-
+    @Query(value = "update post set heart=heart+1 where idx=:idx", nativeQuery = true)
+    Optional<Integer> updateLike(@Param("idx") int idx);
 
     // 해시태그로 검색
     @Query(value = "select * from post where idx in " +
