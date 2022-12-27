@@ -14,6 +14,8 @@ public enum ErrorCode {
     LOGIN_REQUIRED(HttpStatus.UNAUTHORIZED, "로그인이 필요한 페이지입니다."),
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB에 접근 중 오류가 발생했습니다."),
     NULL_VALUE(HttpStatus.INTERNAL_SERVER_ERROR, "값이 존재하지 않습니다."),
+    IS_HEARTED(HttpStatus.FORBIDDEN, "이미 좋아요 누른 글입니다."),
+    IS_FOLLOWING(HttpStatus.FORBIDDEN, "이미 팔로우 중인 사용자입니다."),
     ;
 
     private final HttpStatus status;
