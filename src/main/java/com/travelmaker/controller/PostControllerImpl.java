@@ -84,9 +84,15 @@ public class PostControllerImpl{
 
     /* 좋아요 반영 */
     @GetMapping("/like")
-    public ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx, @RequestParam int like){
-        // TODO: 사용자가 좋아요한 게시글 저장
-        int updatedLike = postService.updateLike(idx, userId);
+    public ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx){
+        postService.updateLike(idx, userId);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    /* 좋아요 취소 */
+    @GetMapping("/unlike")
+    public ResponseEntity cancelLike(@CookieValue("userId") String userId, @RequestParam int idx){
+        postService.cancelLike(idx, userId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 

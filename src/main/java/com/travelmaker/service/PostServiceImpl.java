@@ -4,11 +4,13 @@ import com.travelmaker.config.AmazonS3ResourceStorage;
 import com.travelmaker.dto.FileDetail;
 import com.travelmaker.dto.Post;
 import com.travelmaker.entity.HashtagEntity;
+import com.travelmaker.entity.HeartEntity;
 import com.travelmaker.entity.PostEntity;
 import com.travelmaker.entity.PostnHashtagEntity;
 import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.HashtagRepository;
+import com.travelmaker.repository.HeartRepository;
 import com.travelmaker.repository.PostRepository;
 import com.travelmaker.repository.PostnTagRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +35,9 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostnTagRepository relationRepository;
+
+    @Autowired
+    private HeartRepository heartRepository;
 
     @Autowired
     private AmazonS3ResourceStorage amazonS3ResourceStorage;
@@ -226,16 +231,27 @@ public class PostServiceImpl implements PostService {
 
     /* 좋아요 반영 */
     @Override
-    public int updateLike(int idx, String userId){
+    public void updateLike(int idx, String userId){
+        Optional<HeartEntity> heart = heartRepository.findHeartByUserAndPost(userId, idx);
+        // ERROR: 이미 하트가 눌러져있는 경우 에러 발생
+        if(heart.isPresent()) throw new CustomException(ErrorCode.IS_HEARTED);
+
         Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx)
-                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)) );
-        return entity.get();
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
+
+        HeartEntity heartEntity = HeartEntity.builder().userId(userId).postIdx(idx).build();
+        heartRepository.save(heartEntity);
     }
 
     /* 좋아요 취소 */
-    public int unLike(int idx, int userId){
-        //TODO: FILL,,,,
-        return 1;
+    @Override
+    public void cancelLike(int idx, String userId){
+        // 좋아요 기록 삭제
+        Optional<Integer> heart = Optional.ofNullable(heartRepository.unlike(userId, idx)
+                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
+
+        Optional<Integer> entity = Optional.ofNullable(repository.cancelLike(idx)
+                .orElseThrow(()->new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
     }
 
     /* Hashtag 목록 검색 */

@@ -31,7 +31,10 @@ public interface PostService {
     boolean deletePost(int idx);
 
     /* 좋아요 반영 */
-    int updateLike(int idx, String userId);
+    void updateLike(int idx, String userId);
+
+    /* 좋아요 취소 */
+    void cancelLike(int idx, String userId);
 
     /* Hashtag 목록 검색 */
     String[] searchByKeyword(String keyword);
