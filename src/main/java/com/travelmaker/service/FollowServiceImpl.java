@@ -66,6 +66,29 @@ public class FollowServiceImpl implements FollowService{
         return true;
     }
 
+    /* 팔로우 확인 */
+    @Override
+    public boolean checkFollow(String userId, String followId){
+        // 팔로우하는 유저
+        Optional<Integer> follower = Optional.ofNullable(userRepository.findIdByUserId(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
+        int followerIdx = follower.get();
+
+        // 팔로잉하는 유저
+        Optional<Integer> following = Optional.ofNullable(userRepository.findIdByUserId(followId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
+        int followingIdx = following.get();
+
+        // 팔로잉 확인
+        Optional<Integer> result = Optional.ofNullable(followRepository.checkFollowing(followerIdx, followingIdx)
+                        // ERROR: 팔로잉하고 있지 않으면 에러 발생
+                        .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+
+        // ERROR: 팔로잉 중일 때 에러 발생
+        if(result.get() > 0)    throw new CustomException(ErrorCode.IS_FOLLOWING);
+        return true;
+    }
+
     /* 팔로잉한 사람 목록 */
     @Override
     public List<UserEntity> followingList(String userId){
@@ -80,7 +103,7 @@ public class FollowServiceImpl implements FollowService{
         return followings;
     }
 
-    /* 팔로우한 사람 목록 */
+    /* 팔로워 사람 목록 */
     @Override
     public List<UserEntity> followerList(String userId){
         Optional<Integer> id = Optional.ofNullable(userRepository.findIdByUserId(userId)

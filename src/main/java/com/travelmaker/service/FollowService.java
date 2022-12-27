@@ -12,6 +12,9 @@ public interface FollowService {
     /* 팔로우 취소 */
     boolean unfollow(String userId, String followId);
 
+    /* 팔로우 확인 */
+    boolean checkFollow(String userId, String followId);
+
     /* 팔로잉한 사람 목록 */
     List<UserEntity> followingList(String userId);
 

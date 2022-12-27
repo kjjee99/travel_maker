@@ -38,6 +38,14 @@ public class FollowControllerImpl{
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /* 팔로우 확인 */
+    @GetMapping("/check/{followId}")
+    public ResponseEntity checkFollow(@CookieValue("userId") String userId, @PathVariable("followId") String followId){
+        followService.checkFollow(userId, followId);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
     /* 팔로잉한 사람 목록 */
     @GetMapping("/following/{userId}")
     public ResponseEntity followingList(@PathVariable("userId") String userId){
