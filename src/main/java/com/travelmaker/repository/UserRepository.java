@@ -61,7 +61,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     // TODO: password 빼고
     // 팔로잉 목록
     @Query(value = "Select * from user where idx in " +
-            "(select following from follow where userid = :id)", nativeQuery = true)
+            "(select following from follow where useridx = :id)", nativeQuery = true)
     List<UserEntity> followingList(@Param("id") int id);
 
     // 팔로워 목록
