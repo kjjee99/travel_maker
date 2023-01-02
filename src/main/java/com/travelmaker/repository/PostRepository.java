@@ -35,11 +35,17 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
                     @Param("figures") String figures,
                     @Param("postImg") String postImg);
 
-    // 삭제
+    // 인덱스로 삭제
     @Transactional
     @Modifying
     @Query(value = "delete from post where idx=:idx", nativeQuery = true)
-    Optional<Integer> deletePost(@Param("idx") int id);
+    Optional<Integer> deletePostByIdx(@Param("idx") int id);
+
+    // 유저 아이디로 삭제
+    @Transactional
+    @Modifying
+    @Query(value = "delete from post where userid = :userId", nativeQuery = true)
+    Optional<Integer> deletePostsByUser(@Param("userId") String userId);
 
     // 좋아요 반영
     @Transactional
@@ -47,6 +53,7 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value = "update post set heart=heart+1 where idx=:idx", nativeQuery = true)
     Optional<Integer> updateLike(@Param("idx") int idx);
 
+    // 좋아요 취소
     @Transactional
     @Modifying
     @Query(value = "update post set heart=heart-1 where idx =:idx", nativeQuery = true)
