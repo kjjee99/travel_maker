@@ -48,9 +48,10 @@ public class PostServiceImpl implements PostService {
 
         String imageUrl = "";
 
-        // TODO: MAX 10개
         // TODO: 1MB 이상 용량 확인
-        for(int i = 0; i < images.size(); i++) {
+        int len = images.size() <= 10 ? images.size() : 10;
+
+        for(int i = 0; i < len; i++) {
             FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
             String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
             // 쉼표(,)로 split
@@ -218,7 +219,7 @@ public class PostServiceImpl implements PostService {
                 // 삭제할 게시글이 없는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        Optional<Integer> deletedPost = Optional.ofNullable(repository.deletePost(idx)
+        Optional<Integer> deletedPost = Optional.ofNullable(repository.deletePostByIdx(idx)
                 // 삭제 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
