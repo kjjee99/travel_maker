@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService{
                 .userId(user.getId())
                 .password(encodedPassword)
                 .phoneNumber(user.getPhoneNumber())
-                // TODO: image 저장
+                .profileImg(user.getProfileImg())
                 .build();
 
         // DB 저장
