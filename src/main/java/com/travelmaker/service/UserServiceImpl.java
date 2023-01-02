@@ -7,6 +7,7 @@ import com.travelmaker.entity.UserEntity;
 import com.travelmaker.error.CustomException;
 import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.FollowRepository;
+import com.travelmaker.repository.PostRepository;
 import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class UserServiceImpl implements UserService{
     private UserRepository repository;
     @Autowired
     private FollowRepository followRepository;
+    @Autowired
+    private PostRepository postRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
@@ -180,13 +183,15 @@ public class UserServiceImpl implements UserService{
     /* 회원 탈퇴 */
     public boolean deleteUser(String userId, String password){
 
-        // TODO: 게시글 삭제
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         UserEntity findUser = entity.get();
         if(!passwordEncoder.matches(password, findUser.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
+
+        // 게시글 삭제
+        postRepository.deletePostsByUser(userId).orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         // 팔로워 삭제
         followRepository.removeFollows(findUser.getIdx()).orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
