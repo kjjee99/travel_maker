@@ -47,6 +47,7 @@ public class UserServiceImpl implements UserService{
                 .userId(user.getId())
                 .password(encodedPassword)
                 .phoneNumber(user.getPhoneNumber())
+                // TODO: image 저장
                 .build();
 
         // DB 저장
@@ -133,6 +134,7 @@ public class UserServiceImpl implements UserService{
         log.info(storedImg);
 
         // params ? not changed : changed
+        // 공란이면 이미지 변경 없음
         String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
         String phone_number = user.getPhoneNumber().isEmpty() ? findUser.getPhoneNumber() : user.getPhoneNumber();
         String profile_img = image.isEmpty() ? findUser.getProfileImg() : storedImg;
@@ -177,12 +179,17 @@ public class UserServiceImpl implements UserService{
 
     /* 회원 탈퇴 */
     public boolean deleteUser(String userId, String password){
+
+        // TODO: 게시글 삭제
         Optional<UserEntity> entity = Optional.ofNullable(repository.findByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
 
         UserEntity findUser = entity.get();
         if(!passwordEncoder.matches(password, findUser.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
+
+        // 팔로워 삭제
+        followRepository.removeFollows(findUser.getIdx()).orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR));
 
         Optional<Integer> deletedUser = Optional.ofNullable(repository.deleteByUserId(findUser.getUserId())
                 // 삭제되지 않은 경우
