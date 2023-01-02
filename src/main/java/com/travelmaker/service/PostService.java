@@ -30,6 +30,9 @@ public interface PostService {
     /* 글 삭제 */
     boolean deletePost(int idx);
 
+    /* 좋아요 확인 */
+    void checkLike(int idx, String userId);
+
     /* 좋아요 반영 */
     void updateLike(int idx, String userId);
 

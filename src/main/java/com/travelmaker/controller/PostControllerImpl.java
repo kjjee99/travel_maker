@@ -82,6 +82,13 @@ public class PostControllerImpl{
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
+    /* 좋아요 확인 */
+    @GetMapping("/check/like")
+    public ResponseEntity checkLike(@CookieValue("userId") String userId, @RequestParam int idx){
+        postService.checkLike(idx, userId);
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
     /* 좋아요 반영 */
     @GetMapping("/like")
     public ResponseEntity updateLike(@CookieValue("userId") String userId, @RequestParam int idx){

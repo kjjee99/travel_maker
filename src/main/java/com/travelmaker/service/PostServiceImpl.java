@@ -230,12 +230,19 @@ public class PostServiceImpl implements PostService {
         return true;
     }
 
-    /* 좋아요 반영 */
+    /* 좋아요 확인 */
     @Override
-    public void updateLike(int idx, String userId){
+    public void checkLike(int idx, String userId){
         Optional<HeartEntity> heart = heartRepository.findHeartByUserAndPost(userId, idx);
         // ERROR: 이미 하트가 눌러져있는 경우 에러 발생
         if(heart.isPresent()) throw new CustomException(ErrorCode.IS_HEARTED);
+    }
+
+    /* 좋아요 반영 */
+    @Override
+    public void updateLike(int idx, String userId){
+        // 좋아요가 눌려있는지 확인
+        checkLike(idx, userId);
 
         Optional<Integer> entity = Optional.ofNullable(repository.updateLike(idx)
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
