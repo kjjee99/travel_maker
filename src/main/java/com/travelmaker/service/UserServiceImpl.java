@@ -11,6 +11,7 @@ import com.travelmaker.repository.PostRepository;
 import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -204,8 +205,9 @@ public class UserServiceImpl implements UserService{
 
     /* 회원 검색 */
     @Override
-    public List<UserEntity> searchUserByKeyword(String word){
-        List<UserEntity> list = repository.findByKeyword(word);
+    public List<UserEntity> searchUserByKeyword(String word, int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+        List<UserEntity> list = repository.findByKeyword(word, pageRequest);
         // ERROR: 값이 존재하지 않을 때
         if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
 

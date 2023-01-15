@@ -131,8 +131,8 @@ public class UserControllerImpl{
 
     /* 회원 검색 */
     @GetMapping("/user")
-    public ResponseEntity searchUser(@RequestParam String word){
-        return ResponseEntity.ok(service.searchUserByKeyword(word));
+    public ResponseEntity searchUser(@RequestParam("word") String word, @RequestParam("page") int pageNumber){
+        return ResponseEntity.ok(service.searchUserByKeyword(word, pageNumber));
     }
     // 비밀번호 찾기 => 추가 기능
 }

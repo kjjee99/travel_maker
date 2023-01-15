@@ -3,6 +3,7 @@ package com.travelmaker.repository;
 
 import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -56,7 +57,7 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     @Query(value = "select new com.travelmaker.entity.UserEntity(u.idx, u.userId, u.profileImg) from UserEntity u " +
             "where u.userId like concat('%', :word, '%') " +
             "order by u.userId")
-    List<UserEntity> findByKeyword(@Param("word") String word);
+    List<UserEntity> findByKeyword(@Param("word") String word, Pageable pageable);
 
     // TODO: password 빼고
     // 팔로잉 목록

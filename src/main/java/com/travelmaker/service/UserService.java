@@ -33,5 +33,5 @@ public interface UserService {
     boolean deleteUser(String userId, String password);
 
     /* 회원 검색 */
-    List<UserEntity> searchUserByKeyword(String word);
+    List<UserEntity> searchUserByKeyword(String word, int pageNumber);
 }
