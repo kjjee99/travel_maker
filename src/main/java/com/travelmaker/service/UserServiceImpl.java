@@ -206,7 +206,7 @@ public class UserServiceImpl implements UserService{
     /* 회원 검색 */
     @Override
     public List<UserEntity> searchUserByKeyword(String word, int pageNumber){
-        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+        PageRequest pageRequest = PageRequest.of(pageNumber, 6);
         List<UserEntity> list = repository.findByKeyword(word, pageRequest);
         // ERROR: 값이 존재하지 않을 때
         if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
