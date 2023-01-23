@@ -55,8 +55,8 @@ public class PostServiceImpl implements PostService {
         for(int i = 0; i < len; i++) {
             FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
             String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
-            // 쉼표(,)로 split
-            imageUrl += storedImg + ",";
+            // 쉼표(,)로 split && 이미지 이름만 저장
+            imageUrl += storedImg.split("/")[4] + ",";
         }
 
         PostEntity entity = PostEntity.builder()
@@ -184,19 +184,25 @@ public class PostServiceImpl implements PostService {
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        // TODO: 저장된 이미지 삭제하기
-        String imageUrl = "";
+        // TODO: 이미지가 수정되었는지 확인하는 값
+        // 저장된 이미지 삭제하기
+        String[] urls = entity.get().getPostImg().split(",");
+        for(String url : urls){
+            amazonS3ResourceStorage.deleteFile(url);
+        }
 
+        // 이미지 재등록
+        String imageUrl = "";
         for(int i = 0; i < images.size(); i++) {
             FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
             String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
             // 쉼표(,)로 split
-            imageUrl += storedImg + ",";
+            imageUrl += storedImg.split("/")[4] + ",";
         }
 
         post.setPostImg(imageUrl);
 
-        Optional<PostEntity> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), "img")
+        Optional<Integer> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPostImg())
                 // 수정 시 오류가 발생한 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
@@ -206,7 +212,7 @@ public class PostServiceImpl implements PostService {
                 .content(post.getContent())
                 .heart(post.getHeart())
                 .figures(post.getFigures())
-                .postImg(updatedEntity.get().getPostImg())
+                .postImg(post.getPostImg())
                 .roads(post.getRecommendRoutes())
                 .build();
 

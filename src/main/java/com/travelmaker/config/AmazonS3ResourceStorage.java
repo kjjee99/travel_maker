@@ -2,6 +2,7 @@ package com.travelmaker.config;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,6 +31,10 @@ public class AmazonS3ResourceStorage {
         } finally {
             if (file.exists()) file.delete();
         }
+    }
+
+    public void deleteFile(String fileName){
+        amazonS3Client.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
 }

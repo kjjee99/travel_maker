@@ -28,9 +28,9 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     // 수정
     @Transactional
     @Modifying
-    @Query(value="update post set title=:title, content= :content, figures= :figures, postimg = :postImg" +
+    @Query(value="update post set title=:title, content= :content, figures= :figures, postimg = :postImg " +
             "where idx=:idx", nativeQuery = true)
-    Optional<PostEntity> updatePost(@Param("idx") int id,    // userId
+    Optional<Integer> updatePost(@Param("idx") int id,    // userId
                     @Param("title") String title,
                     @Param("content") String content,
                     @Param("figures") String figures,
