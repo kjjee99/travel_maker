@@ -15,6 +15,7 @@ import com.travelmaker.repository.PostRepository;
 import com.travelmaker.repository.PostnTagRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -279,9 +280,9 @@ public class PostServiceImpl implements PostService {
 
     /* Hashtag 검색 */
     @Override
-    public List<PostEntity> searchByHashtag(String word){
-        // TODO: Pagination 6개?9개?
-        List<PostEntity> postIds = repository.findPostsByKeyword(word);
+    public List<PostEntity> searchByHashtag(String word, int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+        List<PostEntity> postIds = repository.findPostsByKeyword(word, pageRequest);
         // ERROR: 검색한 값이 없을 때
         if(postIds.size() == 0 )    throw new CustomException(ErrorCode.NULL_VALUE);
 

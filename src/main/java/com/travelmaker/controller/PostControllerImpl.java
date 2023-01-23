@@ -113,8 +113,8 @@ public class PostControllerImpl{
 
     /* 해시태그로 검색 */
     @GetMapping("/tag")
-    public ResponseEntity searchByHashtag(@RequestParam String word){
-        List<PostEntity> list =  postService.searchByHashtag(word);
+    public ResponseEntity searchByHashtag(@RequestParam String word, @RequestParam int page){
+        List<PostEntity> list =  postService.searchByHashtag(word, page);
         return ResponseEntity.ok(list);
     }
 }

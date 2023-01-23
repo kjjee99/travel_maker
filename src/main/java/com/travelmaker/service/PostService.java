@@ -43,5 +43,5 @@ public interface PostService {
     String[] searchByKeyword(String keyword);
 
     /* Hashtag 검색 */
-    List<PostEntity> searchByHashtag(String word);
+    List<PostEntity> searchByHashtag(String word, int pageNumber);
 }

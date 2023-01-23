@@ -2,6 +2,7 @@ package com.travelmaker.repository;
 
 import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -63,6 +64,6 @@ public interface PostRepository extends JpaRepository<PostEntity, String> {
     @Query(value = "select * from post where idx in " +
             "(select postid from post_hashtag where tagid in (" +
             "select idx from hashtags where tagname = concat('#', :name)))", nativeQuery = true)
-    List<PostEntity> findPostsByKeyword(@Param("name") String name);
+    List<PostEntity> findPostsByKeyword(@Param("name") String name, Pageable pageable);
 
 }
