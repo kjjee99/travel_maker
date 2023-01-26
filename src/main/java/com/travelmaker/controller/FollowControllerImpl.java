@@ -48,15 +48,15 @@ public class FollowControllerImpl{
 
     /* 팔로잉한 사람 목록 */
     @GetMapping("/following/{userId}")
-    public ResponseEntity followingList(@PathVariable("userId") String userId){
-        List<UserEntity> followings = followService.followingList(userId);
+    public ResponseEntity followingList(@PathVariable("userId") String userId, @RequestParam("page") int pageNumber){
+        List<UserEntity> followings = followService.followingList(userId, pageNumber);
         return ResponseEntity.ok(followings);
     }
 
     /* 팔로우한 사람 목록 */
     @GetMapping("/follower/{userId}")
-    public ResponseEntity followerList(@PathVariable("userId") String userId){
-        List<UserEntity> followers = followService.followerList(userId);
+    public ResponseEntity followerList(@PathVariable("userId") String userId, @RequestParam("page") int pageNumber){
+        List<UserEntity> followers = followService.followerList(userId, pageNumber);
         return ResponseEntity.ok(followers);
     }
 

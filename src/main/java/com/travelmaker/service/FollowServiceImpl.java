@@ -7,6 +7,7 @@ import com.travelmaker.error.ErrorCode;
 import com.travelmaker.repository.FollowRepository;
 import com.travelmaker.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -91,13 +92,15 @@ public class FollowServiceImpl implements FollowService{
 
     /* 팔로잉한 사람 목록 */
     @Override
-    public List<UserEntity> followingList(String userId){
+    public List<UserEntity> followingList(String userId, int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+
         Optional<Integer> id = Optional.ofNullable(userRepository.findIdByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
         int findId = id.get();
 
         // FIXME: Change DTO
-        List<UserEntity> followings = userRepository.followingList(findId);
+        List<UserEntity> followings = userRepository.followingList(findId, pageRequest);
 
         if(followings.size() < 1)   throw new CustomException(ErrorCode.NULL_VALUE);
         return followings;
@@ -105,12 +108,14 @@ public class FollowServiceImpl implements FollowService{
 
     /* 팔로워 사람 목록 */
     @Override
-    public List<UserEntity> followerList(String userId){
+    public List<UserEntity> followerList(String userId, int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+
         Optional<Integer> id = Optional.ofNullable(userRepository.findIdByUserId(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND)));
         int findId = id.get();
 
-        List<UserEntity> followers = userRepository.followerList(findId);
+        List<UserEntity> followers = userRepository.followerList(findId, pageRequest);
         if(followers.size() < 1)   throw new CustomException(ErrorCode.NULL_VALUE);
         return followers;
     }

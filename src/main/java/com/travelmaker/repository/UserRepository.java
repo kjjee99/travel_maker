@@ -1,7 +1,6 @@
 package com.travelmaker.repository;
 
 
-import com.travelmaker.dto.User;
 import com.travelmaker.entity.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -63,10 +62,10 @@ public interface UserRepository extends JpaRepository<UserEntity, String> {
     // 팔로잉 목록
     @Query(value = "Select * from user where idx in " +
             "(select following from follow where useridx = :id)", nativeQuery = true)
-    List<UserEntity> followingList(@Param("id") int id);
+    List<UserEntity> followingList(@Param("id") int id, Pageable pageable);
 
     // 팔로워 목록
     @Query(value = "Select * from user where idx in " +
             "(select useridx from follow where following = :id)", nativeQuery = true)
-    List<UserEntity> followerList(@Param("id") int id);
+    List<UserEntity> followerList(@Param("id") int id, Pageable pageable);
 }

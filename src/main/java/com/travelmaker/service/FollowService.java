@@ -16,8 +16,8 @@ public interface FollowService {
     boolean checkFollow(String userId, String followId);
 
     /* 팔로잉한 사람 목록 */
-    List<UserEntity> followingList(String userId);
+    List<UserEntity> followingList(String userId, int pageNumber);
 
     /* 팔로우한 사람 목록 */
-    List<UserEntity> followerList(String userId);
+    List<UserEntity> followerList(String userId, int pageNumber);
 }
