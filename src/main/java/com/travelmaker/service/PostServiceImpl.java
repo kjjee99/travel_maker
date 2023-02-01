@@ -180,12 +180,12 @@ public class PostServiceImpl implements PostService {
     /* 글 수정 */
     @Override
     public Post modifyPost(Post post, List<MultipartFile> images) {
-        Optional<PostEntity> entity = Optional.ofNullable(repository.findByIdx(post.getIdx())
+        PostEntity entity = repository.findByIdx(post.getIdx())
                 // 수정할 게시글이 존재하지 않는 경우
-                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
+                .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE));
 
         // 받아온 이미지 링크 중 삭제된 이미지를 저장소에서 삭제
-        String[] storedImages = entity.get().getPostImg().split(",");   // DB에 저장된 이미지 링크
+        String[] storedImages = entity.getPostImg().split(",");   // DB에 저장된 이미지 링크
         String[] getImages = post.getPostImg().split(",");
         if(storedImages.length > getImages.length){
             for(int j = 0; j < getImages.length; j++){
@@ -205,27 +205,18 @@ public class PostServiceImpl implements PostService {
                 // 쉼표(,)로 split
                 imageUrl += storedImg.split("/")[4] + ",";
             }
-
-            post.setPostImg(imageUrl);
         }
 
         // TODO: 해시태그 수정
 
-        Optional<Integer> updatedEntity = Optional.ofNullable(repository.updatePost(post.getIdx(), post.getTitle(), post.getContent(), post.getFigures().toString(), post.getPostImg())
-                // 수정 시 오류가 발생한 경우
-                .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
+        entity.setTitle(post.getTitle());
+        entity.setPostImg(imageUrl);
+        entity.setFigures(post.getFigures());
+        entity.setRoads(post.getRecommendRoutes());
 
-        Post updatedPost = Post.builder()
-                .idx(post.getIdx())
-                .title(post.getTitle())
-                .content(post.getContent())
-                .heart(post.getHeart())
-                .figures(post.getFigures())
-                .postImg(post.getPostImg())
-                .roads(post.getRecommendRoutes())
-                .build();
-
-        return updatedPost;
+        PostEntity updatedPost = repository.save(entity);
+        Post dto = new Post();
+        return dto.of(updatedPost);
     }
 
     /* 글 삭제 */
