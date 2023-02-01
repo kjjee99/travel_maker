@@ -184,15 +184,21 @@ public class PostServiceImpl implements PostService {
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE)));
 
-        if(post.isEdited()) {   // 이미지가 수정되었을 때
-            // 저장된 이미지 삭제하기
-            String[] urls = entity.get().getPostImg().split(",");
-            for (String url : urls) {
-                amazonS3ResourceStorage.deleteFile(url);
+        // 받아온 이미지 링크 중 삭제된 이미지를 저장소에서 삭제
+        String[] storedImages = entity.get().getPostImg().split(",");   // DB에 저장된 이미지 링크
+        String[] getImages = post.getPostImg().split(",");
+        if(storedImages.length > getImages.length){
+            for(int j = 0; j < getImages.length; j++){
+                for(int i = j; i < storedImages.length; i++) {
+                    if (storedImages[i].equals(getImages[j])) break;
+                    amazonS3ResourceStorage.deleteFile(storedImages[i]);
+                }
             }
+        }
 
-            // 이미지 재등록
-            String imageUrl = "";
+        String imageUrl = post.getPostImg();
+        if(!images.isEmpty()) {   // 이미지가 수정되었을 때
+            // 새로 등록된 이미지 등록
             for (int i = 0; i < images.size(); i++) {
                 FileDetail fileDetail = FileDetail.multipartOf(images.get(i));
                 String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), images.get(i), fileDetail.getId());
@@ -201,8 +207,6 @@ public class PostServiceImpl implements PostService {
             }
 
             post.setPostImg(imageUrl);
-        } else {
-            post.setPostImg(entity.get().getPostImg());
         }
 
         // TODO: 해시태그 수정
