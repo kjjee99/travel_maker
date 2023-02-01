@@ -44,8 +44,6 @@ public class Post {
     /** 해시태그 */
     private String[] hashtags;
 
-    /** 이미지 수정 여부 */
-    private boolean isEdited;
 
     @Builder
     public Post(int idx, String userId, String title, String content, int heart, Figures figures, String postImg, List<Roads> roads, String[] hashtags) {
