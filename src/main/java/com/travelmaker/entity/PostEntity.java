@@ -3,10 +3,7 @@ package com.travelmaker.entity;
 import com.travelmaker.dto.Figures;
 import com.travelmaker.dto.Roads;
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
@@ -15,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Getter
+@Data
 @NoArgsConstructor
 @ToString
 @TypeDef(name = "json", typeClass = JsonType.class)
