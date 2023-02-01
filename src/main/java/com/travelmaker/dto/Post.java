@@ -1,5 +1,6 @@
 package com.travelmaker.dto;
 
+import com.travelmaker.entity.PostEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,5 +57,18 @@ public class Post {
         this.postImg = postImg;
         this.recommendRoutes = roads;
         this.hashtags = hashtags;
+    }
+
+    public Post of(PostEntity post){
+        return Post.builder()
+                .idx(post.getIdx())
+                .userId(post.getUserId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .heart(post.getHeart())
+                .figures(post.getFigures())
+                .postImg(post.getPostImg())
+                .roads(post.getRoads())
+                .build();
     }
 }
