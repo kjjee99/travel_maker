@@ -3,7 +3,10 @@ package com.travelmaker.entity;
 import com.travelmaker.dto.Figures;
 import com.travelmaker.dto.Roads;
 import com.vladmihalcea.hibernate.type.json.JsonType;
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
