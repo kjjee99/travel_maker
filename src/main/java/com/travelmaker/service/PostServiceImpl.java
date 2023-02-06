@@ -13,16 +13,19 @@ import com.travelmaker.repository.HashtagRepository;
 import com.travelmaker.repository.HeartRepository;
 import com.travelmaker.repository.PostRepository;
 import com.travelmaker.repository.PostnTagRepository;
+import com.travelmaker.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.swing.text.html.Option;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -30,6 +33,8 @@ public class PostServiceImpl implements PostService {
 
     @Autowired
     private PostRepository repository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private HashtagRepository tagRepository;
@@ -108,9 +113,11 @@ public class PostServiceImpl implements PostService {
 
     /* 글 전체 목록 조회 */
     @Override
-    // TODO: 팔로우한 유저만 게시글 뜨기
-    public List<Post> postList(){
-        List<PostEntity> list = repository.findAll();
+    public List<Post> postList(String userId, int pageNumber){
+        PageRequest pageRequest = PageRequest.of(pageNumber, 9);
+        int idx = userRepository.findIdByUserId(userId).get();
+        List<PostEntity> list = repository.findByFollowing(idx, pageRequest);
+
         // 저장된 게시글이 없는 경우
         if(list.size() == 0)    throw new CustomException(ErrorCode.NULL_VALUE);
 

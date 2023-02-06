@@ -1,22 +1,15 @@
 package com.travelmaker.controller;
 
 import com.travelmaker.dto.Post;
-import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
-import com.travelmaker.error.CustomException;
-import com.travelmaker.error.ErrorCode;
 import com.travelmaker.service.PostServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -40,10 +33,10 @@ public class PostControllerImpl{
 
     /* 글 전체 목록 조회*/
     @GetMapping("/list")
-    public ResponseEntity<?> postList(@CookieValue("userId") String userId){
+    public ResponseEntity<?> postList(@CookieValue("userId") String userId, @RequestParam("page") int page){
         // TODO: Pagination -> 마지막에 보낼 데이터 정하기(더 이상 찾을 수 없을 때)
 
-        List<Post> list = postService.postList();
+        List<Post> list = postService.postList(userId, page);
 
         return ResponseEntity.ok(list);
     }

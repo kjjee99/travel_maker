@@ -16,7 +16,7 @@ public interface PostService {
     void saveHashtag(int postId, String[] hashtags);
 
     /* 글 전체 조회 */
-    List<Post> postList();
+    List<Post> postList(String userId, int pageNumber);
 
     /* 유저가 작성한 글 목록 조회 */
     List<PostEntity> userPostList(String id);

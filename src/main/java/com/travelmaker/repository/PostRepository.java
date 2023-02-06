@@ -1,6 +1,5 @@
 package com.travelmaker.repository;
 
-import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,6 +14,10 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<PostEntity, String> {
+
+    // 팔로잉한 유저들의 글 목록
+    @Query(value = "select * from post join follow on useridx = :idx", nativeQuery = true)
+    List<PostEntity> findByFollowing(@Param("idx") int userIdx, Pageable pageable);
 
     // 상세조회
     @Query(value="select * from post where idx=:idx", nativeQuery = true)
