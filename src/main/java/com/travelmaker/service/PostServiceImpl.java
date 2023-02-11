@@ -203,8 +203,8 @@ public class PostServiceImpl implements PostService {
             }
         }
 
-        String imageUrl = Arrays.toString(post.getPostImg())
-                .replace("[", "").replace("]","");
+        String imageUrl = Arrays.toString(post.getPostImg()).replace(" ", "")
+                .replace("[", "").replace("]","") + ",";
         log.info(imageUrl);
         if(images != null) {   // 이미지가 수정되었을 때
             // 새로 등록된 이미지 등록
@@ -219,13 +219,13 @@ public class PostServiceImpl implements PostService {
         // TODO: 해시태그 수정
 
         entity.setTitle(post.getTitle());
+        entity.setContent(post.getContent());
         entity.setPostImg(imageUrl);
         entity.setFigures(post.getFigures());
         entity.setRoads(post.getRecommendRoutes());
 
         PostEntity updatedPost = repository.save(entity);
-        Post dto = new Post();
-        return dto.of(updatedPost);
+        return new Post().of(updatedPost);
     }
 
     /* 글 삭제 */
