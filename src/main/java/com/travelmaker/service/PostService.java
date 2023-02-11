@@ -1,6 +1,7 @@
 package com.travelmaker.service;
 
 import com.travelmaker.dto.Post;
+import com.travelmaker.dto.PostUpdate;
 import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.PostEntity;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,7 +26,7 @@ public interface PostService {
     Post showPost(int idx);
 
     /* 글 수정 */
-    Post modifyPost(Post post, List<MultipartFile> images);
+    Post modifyPost(PostUpdate post, List<MultipartFile> images);
 
     /* 글 삭제 */
     boolean deletePost(int idx);

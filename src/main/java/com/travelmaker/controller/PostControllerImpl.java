@@ -1,6 +1,7 @@
 package com.travelmaker.controller;
 
 import com.travelmaker.dto.Post;
+import com.travelmaker.dto.PostUpdate;
 import com.travelmaker.entity.PostEntity;
 import com.travelmaker.service.PostServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +61,7 @@ public class PostControllerImpl{
     /* 글 수정 */
     @PostMapping("/{idx}")
     public ResponseEntity<?> modifyPost(@PathVariable("idx") int idx, @CookieValue("userId") String userId,
-                                        @RequestPart("post") Post post,
+                                        @RequestPart("post") PostUpdate post,
                                         @RequestPart(value = "images", required = false) List<MultipartFile> images){
         post.setIdx(idx);
         Post updatedPost = postService.modifyPost(post, images);

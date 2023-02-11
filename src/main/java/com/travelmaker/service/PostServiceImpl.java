@@ -3,6 +3,7 @@ package com.travelmaker.service;
 import com.travelmaker.config.AmazonS3ResourceStorage;
 import com.travelmaker.dto.FileDetail;
 import com.travelmaker.dto.Post;
+import com.travelmaker.dto.PostUpdate;
 import com.travelmaker.entity.HashtagEntity;
 import com.travelmaker.entity.HeartEntity;
 import com.travelmaker.entity.PostEntity;
@@ -186,24 +187,27 @@ public class PostServiceImpl implements PostService {
 
     /* 글 수정 */
     @Override
-    public Post modifyPost(Post post, List<MultipartFile> images) {
+    public Post modifyPost(PostUpdate post, List<MultipartFile> images) {
         PostEntity entity = repository.findByIdx(post.getIdx())
                 // 수정할 게시글이 존재하지 않는 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.NULL_VALUE));
 
+        String imageUrl = "";
+
         // 받아온 이미지 링크 중 삭제된 이미지를 저장소에서 삭제
         String[] storedImages = entity.getPostImg().split(",");   // DB에 저장된 이미지 링크
-        String[] getImages = post.getPostImg().split(",");
-        if(storedImages.length > getImages.length){
-            for(int j = 0; j < getImages.length; j++){
+        if(storedImages.length > post.getPostImg().length){
+            for(int j = 0; j < post.getPostImg().length; j++){
                 for(int i = j; i < storedImages.length; i++) {
-                    if (storedImages[i].equals(getImages[j])) break;
+                    if (storedImages[i].equals(post.getPostImg()[j])) {
+                        imageUrl += post.getPostImg()[j] + ",";
+                        break;
+                    }
                     amazonS3ResourceStorage.deleteFile(storedImages[i]);
                 }
             }
         }
 
-        String imageUrl = post.getPostImg();
         if(!images.isEmpty()) {   // 이미지가 수정되었을 때
             // 새로 등록된 이미지 등록
             for (int i = 0; i < images.size(); i++) {
