@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +61,7 @@ public class PostControllerImpl{
     @PostMapping("/{idx}")
     public ResponseEntity<?> modifyPost(@PathVariable("idx") int idx, @CookieValue("userId") String userId,
                                         @RequestPart("post") Post post,
-                                        @RequestPart("images") List<MultipartFile> images){
+                                        @RequestPart(value = "images", required = false) List<MultipartFile> images){
         post.setIdx(idx);
         Post updatedPost = postService.modifyPost(post, images);
 
