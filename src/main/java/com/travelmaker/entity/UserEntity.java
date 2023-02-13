@@ -1,35 +1,36 @@
 package com.travelmaker.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.TypeDef;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
-@TypeDef(name = "json", typeClass = JsonStringType.class)
 @Table(name="user")
 public class UserEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="idx")
     private int idx;
-    @Column(name="email")
     private String email;
-    @Column(name="userid")
+    @Column(name="userid", nullable = false)
     private String userId;
-    @Column(name="password")
     private String password;
-    @Column(name = "phonenumber")
+    @Column(name = "phonenumber", nullable = false)
     private String phoneNumber;
-    @Column(name="profileimg")
+    @Column(name="profileimg", nullable = false)
     private String profileImg;
-    @Column(name="role")
     private String role;
 
     public UserEntity(int idx, String userid, String profileimg){
@@ -46,7 +47,7 @@ public class UserEntity{
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.profileImg = profileImg;
-        this.role = role;
+        this.role = "USER";
     }
 
 

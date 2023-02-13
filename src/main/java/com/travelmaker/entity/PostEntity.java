@@ -10,7 +10,12 @@ import lombok.ToString;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.List;
 
@@ -24,34 +29,29 @@ public class PostEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
     private int idx;
 
-    @Column(name = "userid")
+    @Column(name = "userid", nullable = false)
     private String userId;
 
-    @Column(name = "title")
     private String title;
 
-    @Column(name = "content")
     private String content;
 
-    @Column(name = "heart")
     private int heart;
 
-    @Column(name = "`figures`")
+    @Column(name = "`figures`", nullable = false)
     @Type(type="json")
     private Figures figures;
 
-    @Column(name = "postimg")
+    @Column(name = "postimg", nullable = false)
     private String postImg;
 
-    @Column(name = "roads")
     @Type(type="json")
     private List<Roads> roads;
 
-    @Column(name = "createdat")
-    private Date createdat;
+    @Column(name = "createdat", nullable = false)
+    private Date createdAt;
 
     @Builder
     public PostEntity(int idx, String userId, String title, String content, int heart, Figures figures, String postImg, List<Roads> roads, Date createdAt) {
@@ -63,6 +63,6 @@ public class PostEntity {
         this.figures = figures;
         this.postImg = postImg;
         this.roads = roads;
-        this.createdat = createdAt;
+        this.createdAt = createdAt;
     }
 }

@@ -3,22 +3,28 @@ package com.travelmaker.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @Table(name = "follow")
 public class FollowEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
     private int idx;
-    @Column(name = "useridx")
+    @Column(name = "useridx", nullable = false)
     private int userIdx;
-    @Column(name = "following")
     private int following;
 
     @Builder
