@@ -24,7 +24,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.3'
 	implementation 'com.vladmihalcea:hibernate-types-52:2.16.2'
 	compileOnly 'org.projectlombok:lombok:1.18.24'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools:2.7.3'
 	runtimeOnly 'mysql:mysql-connector-java:8.0.30'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test:2.7.3'
