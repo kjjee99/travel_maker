@@ -94,11 +94,11 @@ public class PostServiceImpl implements PostService {
             if(!entity.isPresent()){
                 // SAVE IN Hashtag table
                 HashtagEntity tagEntity = HashtagEntity.builder()
-                        .tagname(tag)
+                        .tagName(tag)
                         .build();
                 HashtagEntity savedTag = tagRepository.save(tagEntity);
                 // ERROR: 저장이 안되었을 경우
-                if(savedTag.getTagname().isEmpty())
+                if(savedTag.getTagName().isEmpty())
                     throw new CustomException(ErrorCode.INTERNAL_SERVER_ERROR);
                 findTag = savedTag;
             }
