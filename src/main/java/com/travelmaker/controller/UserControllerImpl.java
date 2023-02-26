@@ -40,6 +40,7 @@ public class UserControllerImpl{
                     .maxAge(60 * 60 * 3)   // 3 hours
                     .path("/")            // 모든 경로에서 접근 가능
                     .httpOnly(true)       // 브라우저에서 쿠키 접근 X
+                    .secure(true)
                     .build();
 
             response.setHeader("Set-Cookie", cookie.toString());
@@ -63,10 +64,11 @@ public class UserControllerImpl{
 
         // 쿠키 저장
         ResponseCookie cookie = ResponseCookie.from("userId", id)
-        .maxAge(60 * 60 * 3)   // 3 hours
-        .path("/")            // 모든 경로에서 접근 가능
-        .httpOnly(true)       // 브라우저에서 쿠키 접근 X
-        .build();
+            .maxAge(60 * 60 * 3)   // 3 hours
+            .path("/")            // 모든 경로에서 접근 가능
+            .httpOnly(true)       // 브라우저에서 쿠키 접근 X
+            .secure(true)
+            .build();
 
         response.setHeader("Set-Cookie", cookie.toString());
         return ResponseEntity.ok(HttpStatus.OK);
