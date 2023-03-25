@@ -16,7 +16,7 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<PostEntity, String> {
 
     // 팔로잉한 유저들의 글 목록
-    @Query(value = "select * from post join follow on useridx = :idx", nativeQuery = true)
+    @Query(value = "select * from post where userid in (select userid from user where idx in (select following from follow where useridx = :idx))", nativeQuery = true)
     List<PostEntity> findByFollowing(@Param("idx") int userIdx, Pageable pageable);
 
     // 상세조회
