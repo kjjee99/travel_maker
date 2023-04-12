@@ -131,9 +131,14 @@ public class UserServiceImpl implements UserService{
 
         checkPassword(user.getPassword(), findUser.getPassword());
 
+        String storedImg = "";
         // 이미지 저장하기
-        FileDetail fileDetail = FileDetail.multipartOf(image);
-        String storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), image, fileDetail.getId());
+        if(!image.isEmpty()){
+            FileDetail fileDetail = FileDetail.multipartOf(image);
+            storedImg = amazonS3ResourceStorage.store(fileDetail.getPath(), image, fileDetail.getId());
+        } else {
+            storedImg = findUser.getProfileImg();
+        }
 
         log.info(storedImg);
 
@@ -141,9 +146,8 @@ public class UserServiceImpl implements UserService{
         // 공란이면 이미지 변경 없음
         String email = user.getEmail().isEmpty() ? findUser.getEmail() : user.getEmail();
         String phone_number = user.getPhoneNumber().isEmpty() ? findUser.getPhoneNumber() : user.getPhoneNumber();
-        String profile_img = image.isEmpty() ? findUser.getProfileImg() : storedImg;
 
-        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(user.getId(), email, phone_number, profile_img)
+        Optional<Integer> updatedUser = Optional.ofNullable(repository.updateUser(user.getId(), email, phone_number, storedImg)
                 // 수정되지 않은 경우
                 .orElseThrow(() -> new CustomException(ErrorCode.INTERNAL_SERVER_ERROR)));
 
